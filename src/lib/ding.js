@@ -132,6 +132,8 @@ export function jsApiOAuth(path) {
     }
     api.getJsApiInfos(encodeURIComponent(path), function (res) {
       if (res.data.code) {
+        console.log('jpi')
+        console.log(res)
         let data = res.data.data;
         const checks = ['agentId', 'corpId', 'timeStamp', 'nonceStr', 'signature'];
         const responseKey = Object.keys(data);

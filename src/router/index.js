@@ -17,119 +17,45 @@ const router = new Router({
       path: '/',
       component: require('@/views/material'),
       meta: {
-        title: '自助首页',
+        title: '物料提报申请',
         ddConfig: true
       }
     },
     {
-      path: '/e',
-      component: require('@/views/userinfo'),
-      meta: {
-        title: '自助首页',
-        ddConfig: true
-      }
+      path: '/materialList',
+      component: require('@/views/materialList'),
+      meta: {title: '物料需求列表'}
     },
     {
-      path: '/family',
-      component: require('@/views/family'),
-      meta: {title: '家庭成员'}
+      path: '/deliveryPlanList',
+      component: require('@/views/deliveryPlanList'),
+      meta: {title: '交货计划'}
     },
     {
-      path: '/familyDetail',
-      component: require('@/views/familyDetail'),
-      meta: {title: '家庭详细信息'}
+      path: '/deliveryPlan',
+      component: require('@/views/deliveryPlan'),
+      meta: {title: '交货计划明细'}
     },
     {
-      path: '/addfamilyDetail',
-      component: require('@/views/addfamilyDetail'),
-      meta: {title: '家庭详细信息'}
+      path: '/bomList',
+      component: require('@/views/BOMList'),
+      meta: {title: 'BOM'}
     },
     {
-      path: '/emergency',
-      component: require('@/views/emergency'),
-      meta: {title: '紧急联系人'}
+      path: '/bom',
+      component: require('@/views/BOM'),
+      meta: {title: 'BOM明细'}
     },
     {
-      path: '/emergencyDetail',
-      component: require('@/views/emergencyDetail'),
-      meta: {title: '紧急联系人详情'}
-    },
-    {
-      path: '/healthy',
-      component: require('@/views/healthy'),
-      meta: {title: '健康状况'}
-    },
-    {
-      path: '/education',
-      component: require('@/views/education'),
-      meta: {title: '教育经历'}
-    },
-    {
-      path: '/educationDetail',
-      component: require('@/views/educationDetail'),
-      meta: {title: '教育经历详情'}
-    },
-    {
-      path: '/work',
-      component: require('@/views/work'),
-      meta: {title: '工作履历'}
-    },
-    {
-      path: '/workDetail',
-      component: require('@/views/workDetail'),
-      meta: {title: '工作详情'}
-    },
-    {
-      path: '/dateRecord',
-      component: require('@/views/dateRecord'),
-      meta: {title: '日期记录'}
-    },
-    {
-      path: '/titleInfo',
-      component: require('@/views/titleInfo'),
-      meta: {title: '职称证书'}
-    },
-    {
-      path: '/titleInfoDetail',
-      component: require('@/views/titleInfoDetail'),
-      meta: {title: '职称证书详情'}
+      path: '/materialHeader',
+      component: require('@/views/materialHeader'),
+      meta: {title: '物料需求抬头'}
     },
     {
       path: '*',
       component: require('@/views/error'),
       meta: {
         title: '错误'
-      }
-    },
-    {
-      path: '/salary',
-      component: require('@/views/salary'),
-      meta: {title: '工资查询'}
-    },
-    {
-      path: '/viewsalary',
-      component: require('@/views/viewsalary'),
-      meta: {title: '工资详情'}
-    },
-    {
-      path: '/idnumber',
-      component: require('@/views/idnumber'),
-      meta: {
-        title: '身份证输入',
-        leftBtn: {
-          text: '退出',
-          show: true, // 控制按钮显示， true 显示， false 隐藏， 默认true
-          control: true, // 是否控制点击事件，true 控制，false 不控制， 默认false
-          showIcon: true, // 是否显示icon，true 显示， false 不显示，默认true； 注：具体UI以客户端为准
-          onSuccess: function (result) {
-            dd.biz.navigation.close({
-              onSuccess: function (result) {
-              },
-              onFail: function (err) {
-              }
-            })
-          }
-        }
       }
     }
   ]
@@ -140,7 +66,7 @@ router.beforeEach((to, from, next) => {
 //     next(false)
 //   }
   if (dd.version === null && to.fullPath.indexOf('/cs') < 0) {
-    // window.alert('请在钉钉手机端打开')
+    window.alert('请在钉钉手机端打开')
     next()
   } else {
     if (to.meta.ddConfig) { // 如果ddConfig为ture 则进行授权jsAPI

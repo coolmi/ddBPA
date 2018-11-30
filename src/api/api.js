@@ -39,6 +39,8 @@ export default {
    */
   getLogin: function (data, cb) {
     axios.get('/dingding/es/login?code=' + data)
+      console.log('皮不皮啊')
+      console.log(data)
       .then((res) => {
         cb(res);
       }).catch((error) => {
@@ -65,14 +67,29 @@ export default {
    * @param cb
    */
   getJsApiInfos: function (params, cb) {
-    // let dingtalkCode = ding.parseParam(window.location.href, 'dingtalk_code') || ding.getLocation(AUTH_DINGTALKCODE)
-    axios.get('/api/ddtalk/miandeng/h5config?purl=' + params)
-      .then((res) => {
-        cb(res);
-      }).catch((error) => {
-      return Promise.reject(error)
-    })
-  },
+      // let dingtalkCode = ding.parseParam(window.location.href, 'dingtalk_code') || ding.getLocation(AUTH_DINGTALKCODE)
+      axios.get('/api/ddtalk/miandeng/h5config?purl=' + params)
+        .then((res) => {
+          console.log('什么数据:')
+          console.log(params)
+          console.log(res)
+          cb(res);
+        }).catch((error) => {
+        return Promise.reject(error)
+      })
+    },
+  // getJsApiInfos: function (params, cb) {
+  //   console.log(params)
+  //   let dingtalkCode = ding.parseParam(window.location.href, 'dingtalk_code') || ding.getLocation(AUTH_DINGTALKCODE)
+  //   axios.get('/api/ddtalk/miandeng/h5config?purl=' + params + '&dingtalk_code=' + dingtalkCode)
+  //     .then((res) => {
+  //       console.log('ddddddddd')
+  //       console.log(res)
+  //       cb(res);
+  //     }).catch((error) => {
+  //     return Promise.reject(error)
+  //   })
+  // },
   /**
    * 获取家庭成员
    * @param cb
