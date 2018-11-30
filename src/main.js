@@ -16,8 +16,7 @@ store.dispatch('saveURL', location.href)
 store.dispatch('saveDingTalkCode')
 // initVue();
 dingUser.getRequestAuthCode(location.href).then((data) => {
-  api.getLogin(data, function (res) {
-    console.log('oipopoi')
+  api.getLogin(data).then(res => {
     if (res.data.code) {
       console.log(res)
       initVue();

@@ -38,13 +38,13 @@ export default {
    * @param cb
    */
   getLogin: function (data, cb) {
-    axios.get('/dingding/es/login?code=' + data)
-      console.log('皮不皮啊')
-      console.log(data)
-      .then((res) => {
-        cb(res);
-      }).catch((error) => {
-      return Promise.reject(error)
+    return new Promise((resolve, reject) => {
+      axios.get('/dingding/es/login?code=' + data)
+        .then((res) => {
+          resolve(res);
+        }).catch((error) => {
+        reject(error)
+      })
     })
   },
 
