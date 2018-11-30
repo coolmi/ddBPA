@@ -41,6 +41,7 @@ export default {
     return new Promise((resolve, reject) => {
       axios.get('/dingding/es/login?code=' + data)
         .then((res) => {
+          console.log('sdfasd')
           resolve(res);
         }).catch((error) => {
         reject(error)

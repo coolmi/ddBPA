@@ -19,6 +19,8 @@ dingUser.getRequestAuthCode(location.href).then((data) => {
   api.getLogin(data).then(res => {
     if (res.data.code) {
       console.log(res)
+      console.log(res)
+      console.log(res)
       initVue();
     } else {
       whole.showTop('获取钉钉免登权限失败')
