@@ -3,15 +3,15 @@
     <group title="物料需求列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
       <card class="card">
         <!--:header="{title:newname}" @on-click-header="mdevent"-->
-        <div class="card_header" slot="header" @click="mdevent">{{newname}}</div>
+        <div class="card_header" slot="header" @click="mdevent">{{wl}}</div>
         <div slot="content" class="card_content" @click="mdevent">
           <div class="vux-1px-r">
-            <span>30</span>
+            <span>{{num}}</span>
             <br/>
             <span class="content_color">数量</span>
           </div>
           <div class="vux-1px-r">
-            <span>熟食二厂</span>
+            <span>{{factory}}</span>
             <br/>
             <span class="content_color">工厂</span>
           </div>
@@ -60,10 +60,16 @@
     },
     data() {
       return {
-        newname: '8A000567/(采)_3号鸡板腿300/350G_10KGX2'
+        wl: '',
+        num: '',
+        factory: ''
       }
     },
     created() {
+      let materiallist = JSON.parse(this.$route.query.codeData);
+      this.wl = materiallist.wl
+      this.num = materiallist.num
+      this.factory = materiallist.factory
     },
     methods: {
       // 物料明细页跳转

@@ -1,16 +1,16 @@
 <template>
   <div>
     <group title="物料明细信息" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <v-search title="物料类别" :cdata="listce" v-model="nameceshi"></v-search>
-      <x-input title="物料" v-model="nameceshi" text-align="left"></x-input>
-      <v-search title="工厂" :cdata="listce" v-model="nameceshi"></v-search>
-      <x-input title="单价" v-model="nameceshi" text-align="left"></x-input>
-      <cell title="金额" v-model="nameceshi" value-align="left"></cell>
-      <cell title="货币" v-model="nameceshi" value-align="left"></cell>
-      <x-input title="数量" v-model="nameceshi" text-align="left"></x-input>
-      <cell title="单位" v-model="nameceshi" value-align="left"></cell>
-      <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="nameceshi"></x-textarea>
-      <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="nameceshi"></x-textarea>
+      <selector title="物料类别" placeholder="请选择" v-model="info.wllb" :options="protypeList" ></selector>
+      <x-input title="物料" v-model="info.wl" text-align="left"></x-input>
+      <x-input title="数量" v-model="info.num" text-align="left"></x-input>
+      <cell title="单位" v-model="info.danwei" value-align="left"></cell>
+      <x-input title="单价" v-model="info.price" text-align="left"></x-input>
+      <selector title="货币" placeholder="请选择" v-model="info.coin" :options="huobiList"></selector>
+      <cell title="金额" v-model="money" value-align="left"></cell>
+      <selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory"></selector>
+      <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.zlrequest"></x-textarea>
+      <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="info.jsrequest"></x-textarea>
     </group>
     <box gap="10px 80px">
       <x-button text="下一步" @click.native="one" class="baocun" plain type="primary"></x-button>
@@ -29,13 +29,15 @@
     XInput,
     XTextarea,
     PopupPicker,
-    Cell
+    Cell,
+    Selector
   } from 'vux'
   import api from 'api';
   import axios from 'axios';
   import whole from '@/lib/whole'
   import router from '../router'
   import ding from '@/lib/ding'
+  import {mapGetters} from 'vuex'
   import vSearch from '@/components/searchChecker';
 
   export default {
@@ -50,24 +52,70 @@
       XTextarea,
       PopupPicker,
       Cell,
-      vSearch
+      vSearch,
+      Selector
     },
     data() {
       return {
-        nameceshi: 'QQ',
-        namece: [],
-        listce: []
+        info: {
+          wllb: '',
+          wl: '',
+          num: '',
+          danwei: 'T',
+          price: '',
+          coin: '',
+          factory: '',
+          zlrequest: '',
+          jsrequest: ''
+        },
+        protypeList: [], // 物料类别
+        tplantList: [], // 工厂
+        huobiList: [
+          {key: '人民币', value: '人民币'},
+          {key: '美元', value: '美元'},
+          {key: '日元', value: '日元'},
+          {key: '欧元', value: '欧元'}
+        ]
       }
     },
     created() {
-      // this.getInfos();
-      // this.getadmininfo();
+      this.getlistInfo();
+    },
+    computed: {
+      ...mapGetters({
+        getinfo: 'getmaterialDetail'
+      }),
+      money () {
+        return this.price * this.num
+      }
     },
     methods: {
+      getlistInfo() {
+        let _that = this;
+        api.getlistData(function (res) {
+          if (res) {
+            console.log(res);
+            res.data.protypeList.forEach(function (item) {
+              let protypeobj = {
+                key: item.LABEL,
+                value: item.VALUE
+              }
+              _that.protypeList.push(protypeobj)
+            })
+            res.data.tplantList.forEach(function (item) {
+              let tplantobj = {
+                key: item.PLANT,
+                value: item.PLANT_DESC
+              }
+              _that.tplantList.push(tplantobj)
+            })
+          }
+        })
+      },
       one() {
         // 健康页面跳转
         let _that = this;
-        router.push({path: '/materialList', query: {codeData: JSON.stringify(_that.jkData)}})
+        router.push({path: '/materialList', query: {codeData: JSON.stringify(_that.info)}})
       },
       getadmininfo() {
         let _that = this;

@@ -71,7 +71,7 @@
         type: Array,
         default: []
       },
-      value: {
+      VALUE: {
         type: String,
         default: ''
       },
@@ -92,12 +92,12 @@
     },
     computed: {
       valueName: function () {
-        this.checkerValue = this.value
+        this.checkerValue = this.VALUE
         let index = _.findLastIndex(this.cdata, {
-          key: this.value
+          key: this.VAULE
         })
         if (index >= 0) {
-          return this.cdata[index].value
+          return this.cdata[index].VALUE
         } else {
           return ''
         }
@@ -127,10 +127,10 @@
       checkSearch() {
         this.showSearch = true;
       },
-      radioChange(value, label) {
+      radioChange(VALUE, LABEL) {
         let item = {
-          title: label,
-          key: value
+          title: LABEL,
+          key: VALUE
         }
         this.resultClick(item);
       },

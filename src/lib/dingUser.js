@@ -10,13 +10,10 @@ export function getRequestAuthCode(path) {
     // success('123sddsfsdfdsfsdfds')
     ding.jsApiOAuth(path).then((ddconfig) => {
       let dd = window.dd;
-      console.log('1')
-      console.log(ddconfig)
       dd.ready(function () {
         dd.runtime.permission.requestAuthCode({
           corpId: ddconfig.corpId,
           onSuccess: function (result) {
-            console.log(result)
             store.dispatch('updateCode', result.code)
             success(result.code)
           },

@@ -39,9 +39,8 @@ export default {
    */
   getLogin: function (data, cb) {
     return new Promise((resolve, reject) => {
-      axios.get('/dingding/es/login?code=' + data)
+      axios.post('/dingding/pm/login?code=' + data)
         .then((res) => {
-          console.log('sdfasd')
           resolve(res);
         }).catch((error) => {
         reject(error)
@@ -71,32 +70,17 @@ export default {
       // let dingtalkCode = ding.parseParam(window.location.href, 'dingtalk_code') || ding.getLocation(AUTH_DINGTALKCODE)
       axios.get('/api/ddtalk/miandeng/h5config?purl=' + params)
         .then((res) => {
-          console.log('什么数据:')
-          console.log(params)
-          console.log(res)
           cb(res);
         }).catch((error) => {
         return Promise.reject(error)
       })
     },
-  // getJsApiInfos: function (params, cb) {
-  //   console.log(params)
-  //   let dingtalkCode = ding.parseParam(window.location.href, 'dingtalk_code') || ding.getLocation(AUTH_DINGTALKCODE)
-  //   axios.get('/api/ddtalk/miandeng/h5config?purl=' + params + '&dingtalk_code=' + dingtalkCode)
-  //     .then((res) => {
-  //       console.log('ddddddddd')
-  //       console.log(res)
-  //       cb(res);
-  //     }).catch((error) => {
-  //     return Promise.reject(error)
-  //   })
-  // },
   /**
-   * 获取家庭成员
+   * 获取列表数据
    * @param cb
    */
-  getjtData: function (cb) {
-    axios.get('/dingding/es/family')
+  getlistData: function (cb) {
+    axios.get('/api/sopheader/create')
       .then((res) => {
         cb(res);
       }).catch((error) => {
