@@ -1,34 +1,40 @@
-import dataUtils from '../../filters/dataUtils'
 export default {
   state: {
-    materialinfo: {}
+    materialinfo: {},
+    materiallist: []
   },
 
   actions: {
-    addBusinessTripInfo({commit}, info) {
-      commit('ADD_BUSINESSTRIP_INFO', info);
+    addmateriallist({commit}, info) {
+      commit('ADD_MATERIALIST', info);
     },
-    addBusinessTrip({commit}, data) {
-      commit('ADD_BUSINESSTRIP', data);
+    clearmaterialinfo({commit}) {
+      commit('CLEAR_MATERIAINFO');
     },
-    clearBusinessTrip({commit}) {
-      commit('CLEAR_BUSINESSTRIP');
+    savemateriallist({commit}, list) {
+      commit('SAVE_MATERIALLIST', list);
+    },
+    clearmateriallist({commit}) {
+      commit('CLEAR_MATERIALLIST');
     }
   },
 
   mutations: {
-    'ADD_BUSINESSTRIP_INFO'(state, info) {
-      state.infos = info
+    'ADD_MATERIALIST'(state, info) {
+      state.materiallist.push(info)
     },
-    'ADD_BUSINESSTRIP'(state, data) {
-      let froms = dataUtils.filterData(state.forms, data)
-      state.forms = froms
-    },
-    'CLEAR_MATERIAL'(state) {
+    'CLEAR_MATERIAINFO'(state) {
       state.materialinfo = {}
+    },
+    'SAVE_MATERIALLIST'(state, list) {
+      state.materiallist = list
+    },
+    'CLEAR_MATERIALLIST'(state) {
+      state.materiallist = []
     }
   },
   getters: {
-    getmaterialDetail: state => state.materialinfo
+    getmaterialinfo: state => state.materialinfo,
+    getmateriallist: state => state.materiallist
   }
 }

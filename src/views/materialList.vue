@@ -1,17 +1,17 @@
 <template>
   <div>
     <group title="物料需求列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card class="card">
+      <card class="card" v-for="pl of getlist" :key="pl.id">
         <!--:header="{title:newname}" @on-click-header="mdevent"-->
-        <div class="card_header" slot="header" @click="mdevent">{{wl}}</div>
-        <div slot="content" class="card_content" @click="mdevent">
+        <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.wl}}</div>
+        <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
-            <span>{{num}}</span>
+            <span>{{pl.num}}</span>
             <br/>
             <span class="content_color">数量</span>
           </div>
           <div class="vux-1px-r">
-            <span>{{factory}}</span>
+            <span>{{pl.plant}}</span>
             <br/>
             <span class="content_color">工厂</span>
           </div>
@@ -19,7 +19,7 @@
         <div class="card_footer" slot="footer">
           <x-button type="primary" mini plain class="card_footer_but" text="交货计划" @click.native="jhevent"></x-button>
           <x-button type="primary" mini plain class="card_footer_but" text="BOM" @click.native="bomevent"></x-button>
-          <x-button type="primary" mini plain class="card_footer_but" text="删除"></x-button>
+          <x-button type="primary" mini plain class="card_footer_but" text="删除" @click.native="del(pl.id)"></x-button>
         </div>
       </card>
     </group>
@@ -50,6 +50,7 @@
     FlexboxItem
   } from 'vux'
   // import whole from '@/lib/whole';
+  import {mapGetters} from 'vuex'
   // import axios from 'axios';
   import router from '../router';
   import vSearch from '@/components/searchChecker';
@@ -65,17 +66,21 @@
         factory: ''
       }
     },
+    computed: {
+      ...mapGetters({
+        getlist: 'getmateriallist'
+      })
+    },
     created() {
-      let materiallist = JSON.parse(this.$route.query.codeData);
-      this.wl = materiallist.wl
-      this.num = materiallist.num
-      this.factory = materiallist.factory
+      // let materiallist = JSON.parse(this.$route.query.codeData);
+      // this.wl = materiallist.wl
+      // this.num = materiallist.num
+      // this.factory = materiallist.factory
     },
     methods: {
-      // 物料明细页跳转
-      mdevent() {
-        let _that = this;
-        router.push({path: '/', query: {codeData: JSON.stringify(_that.jkData)}})
+      // 单个物料详情跳转
+      mdevent(pl) {
+        router.push({path: '/', query: {pl: JSON.stringify(pl)}})
       },
       // 交货计划页跳转
       jhevent() {
@@ -87,10 +92,18 @@
         let _that = this;
         router.push({path: '/bomList', query: {codeData: JSON.stringify(_that.jkData)}})
       },
+      // 删除物料
+      del(id) {
+        let _that = this
+        _that.getlist = _that.getlist.filter(item => item.id !== id)
+        _that.$store.dispatch('savemateriallist', _that.getlist)
+      },
+      // 新增物料
       xzevent() {
         let _that = this;
         router.push({path: '/', query: {codeData: JSON.stringify(_that.jkData)}})
       },
+      // 下一步
       nextevent() {
         let _that = this;
         router.push({path: '/materialHeader', query: {codeData: JSON.stringify(_that.jkData)}})
@@ -118,7 +131,8 @@
   .card_header {
     height: 20px;
     line-height: 20px;
-    margin: 5px 0 2px 40px;
+    margin: 5px 0 2px;
+    text-align: center;
     /*border-bottom: #cccccc 1px solid;*/
   }
 
