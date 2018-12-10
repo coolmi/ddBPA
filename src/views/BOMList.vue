@@ -1,7 +1,7 @@
 <template>
   <div>
     <group title="BOM列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card v-if="flag === '1'" v-for="(pl, index) in getlist" :key="index">
+      <card v-if="listDate.length > 0" v-for="(pl, index) in listDate" :key="index">
         <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.wl}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
@@ -19,7 +19,7 @@
           <x-button type="primary" mini plain class="card_footer_but" text="删除"></x-button>
         </div>
       </card>
-      <div class="sznull" v-if="flag === '0'">
+      <div class="sznull" v-else>
         <p >空空如也~请新增BOM</p>
       </div>
     </group>
@@ -63,7 +63,6 @@
     data() {
       return {
         wlid: '',
-        flag: '0',
         listDate: []
       }
     },
@@ -73,21 +72,15 @@
       })
     },
     created() {
-      alert(JSON.stringify(this.getlist))
       this.wlid = JSON.parse(this.$route.query.id);
-      alert('wlid')
-      alert(this.wlid)
       if (this.getlist.length > 0) {
+        let szobj = []
         for (let o of this.getlist) {
           if (o.wlid === this.wlid) {
-            this.listDate.push(o)
-            this.flag = '1'
-          } else {
-            this.flag = '0'
+            szobj.push(o)
           }
         }
-      } else {
-        this.flag = '0'
+        this.listDate = szobj
       }
     },
     methods: {
@@ -98,8 +91,6 @@
       },
       // 新增bom
       xzevent() {
-        alert('新增')
-        alert(this.wlid)
         router.push({path: '/bom', query: {wlid: JSON.stringify(this.wlid)}})
       },
       // 保存

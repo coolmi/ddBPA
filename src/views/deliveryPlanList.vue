@@ -1,17 +1,16 @@
 <template>
   <div>
     <group title="计划列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card class="card">
-        <!--:header="{title:newname}" @on-click-header="mdevent"-->
-        <div class="card_header" slot="header" @click="mdevent">{{certificate}}</div>
-        <div slot="content" class="card_content" @click="mdevent">
+      <card class="card" v-if="listDate.length > 0" v-for="(pl, index) in listDate" :key="index">
+        <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.jhrq}}</div>
+        <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
-            <span>30</span>
+            <span>{{pl.num}}</span>
             <br/>
             <span class="content_color">数量</span>
           </div>
           <div class="vux-1px-r">
-            <span>日</span>
+            <span>{{pl.bsname}}</span>
             <br/>
             <span class="content_color">期间标识</span>
           </div>
@@ -20,6 +19,9 @@
           <x-button type="primary" mini plain class="card_footer_but"  text="删除"></x-button>
         </div>
       </card>
+      <div class="sznull" v-else>
+        <p >空空如也~请新增BOM</p>
+      </div>
     </group>
     <box gap="10px 80px">
       <flexbox>
@@ -52,6 +54,7 @@
   // import whole from '@/lib/whole';
   // import axios from 'axios';
   import router from '../router';
+  import {mapGetters} from 'vuex'
 
   export default {
     components: {
@@ -59,20 +62,38 @@
     },
     data() {
       return {
-        certificate: '计划2018-11-27'
+        wlid: '',
+        listDate: []
       }
     },
+    computed: {
+      ...mapGetters({
+        getlist: 'getplantlist'
+      })
+    },
     created() {
+      this.wlid = JSON.parse(this.$route.query.id);
+      if (this.getlist.length > 0) {
+        let szobj = []
+        for (let o of this.getlist) {
+          if (o.wlid === this.wlid) {
+            szobj.push(o)
+          }
+        }
+        this.listDate = szobj
+      }
     },
     methods: {
-      mdevent () {
-        let _that = this;
-        router.push({path: '/deliveryPlan', query: {codeData: JSON.stringify(_that.jkData)}})
+      // 修改
+      mdevent (pl) {
+        let planobj = {pl: pl, wlid: this.wlid}
+        router.push({path: '/deliveryPlan', query: {planobj: JSON.stringify(planobj)}})
       },
+      // 新增
       xzevent() {
-        let _that = this;
-        router.push({path: '/deliveryPlan', query: {codeData: JSON.stringify(_that.jkData)}})
+        router.push({path: '/deliveryPlan', query: {wlid: JSON.stringify(this.wlid)}})
       },
+      // 保存
       saveevent() {
         let _that = this;
         router.push({path: '/materialList', query: {codeData: JSON.stringify(_that.jkData)}})
@@ -128,5 +149,10 @@
   }
   .card_footer_but {
     border-radius: 20px;
+  }
+  .sznull {
+    text-align: center;
+    font-size: 20px;
+    background-color: #f4f4f4;
   }
 </style>

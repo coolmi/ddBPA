@@ -4,22 +4,23 @@
       <!--<cell v-for="kqobj in listce" :key="kqobj.id" :title="kqobj" is-link @click.native="toDetail(kqobj)"></cell>-->
     <!--</group>-->
     <group title="交货计划明细" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <selector title="期间标识" v-model="name" :options="list1"></selector>
-      <datetime title="交货日期" v-model="date" format="YYYY-MM-DD"></datetime>
-      <x-input title="数量" v-model="num"></x-input>
-      <cell title="单位" v-model="wei" value-align="left"></cell>
+      <selector title="期间标识" v-model="obj.qjbs" :options="list1" @on-change="getbsname"></selector>
+      <datetime title="交货日期" v-model="obj.jhrq" format="YYYY-MM-DD"></datetime>
+      <x-input title="数量" v-model="obj.num"></x-input>
+      <cell title="单位" v-model="obj.danwei" value-align="left"></cell>
+      <cell v-show="idflag" v-model="ids"></cell>
     </group>
     <flexbox class="footerButton" style="z-index: 2;">
-      <flexbox-item @click.native="saveevent" style="color:#FF8519;">保存</flexbox-item>
+      <flexbox-item v-if="flag === '0'" @click.native="oneevent" style="color:#FF8519;">保存</flexbox-item>
+      <flexbox-item v-if="flag === '1'" @click.native="twoevent" style="color:#FF8519;">保存</flexbox-item>
     </flexbox>
   </div>
 </template>
 
 <script>
   import {Group, XInput, Datetime, Cell, XButton, Box, Flexbox, FlexboxItem, Selector} from 'vux'
-  import whole from '@/lib/whole';
-  import axios from 'axios';
   import router from '../router';
+  import {mapGetters} from 'vuex'
 
   export default {
     components: {
@@ -32,45 +33,68 @@
           {key: '02', value: '周'},
           {key: '03', value: '月'}
         ],
-        name: '03',
-        date: '',
-        num: '12',
-        wei: 'T'
+        obj: {
+          wlid: '',
+          id: '',
+          qjbs: '01',
+          bsname: '',
+          jhrq: '',
+          num: '',
+          danwei: 'T'
+        },
+        idflag: false,
+        flag: '0',
+        idf: ''
       }
     },
-    created() {},
+    computed: {
+      ...mapGetters({
+        getlist: 'getplantlist'
+      }),
+      // 赋予对象唯一标识
+      ids: function () {
+        this.obj.id = new Date().getTime()
+        return this.obj.id
+      }
+    },
+    created() {
+      this.obj.id = new Date().getTime()
+      this.obj.wlid = JSON.parse(this.$route.query.wlid);
+      let planobj = JSON.parse(this.$route.query.planobj);
+      console.log(planobj)
+      if (planobj !== null) {
+        this.obj = planobj.pl
+        this.obj.wlid = planobj.wlid
+        this.idf = planobj.pl.id
+        this.flag = '1'
+      }
+    },
     methods: {
-      saveevent() {
-        let _that = this;
-        router.push({path: '/deliveryPlanList', query: {codeData: JSON.stringify(_that.jkData)}})
+      oneevent() {
+        this.$store.dispatch('addplantlist', this.obj)
+        router.go(-1)
       },
-      saveinfo() {
-        let _that = this;
-        let params = new window.FormData();
-        console.log(_that.jkData);
-        params.append('zzdsg', _that.jkData.zzdsg || '');
-        params.append('zzdtz', _that.jkData.zzdtz || '');
-        params.append('bsup', _that.bsup || '');
-        params.append('zhrscbw', _that.jkData.zhrscbw || '');
-        params.append('zhrsccd', _that.jkData.zhrsccd || '');
-        params.append('certificate', _that.certificate || '');
-        params.append('sbgsz', _that.jkData.sbgsz || '');
-        params.append('sbadt', _that.jkData.sbadt || '');
-        params.append('sbdst', _that.jkData.sbdst || '');
-        axios.post('/dingding/es/health', params)
-          .then((res) => {
-            //  保存成功 返回true
-            if (res.data.code) {
-              whole.showTop('保存成功');
-              setTimeout(() => {
-                router.go(-1);
-              }, 1000);
-            } else {
-              window.alert('保存失败,请重试')
-            }
-          }).catch((error) => {
-          return Promise.reject(error)
+      twoevent() {
+        let _that = this
+        _that.getlist.forEach(item => {
+          if (item.id === _that.idf) {
+            item.qjbs = _that.obj.qjbs
+            item.jhrq = _that.obj.jhrq
+            item.num = _that.obj.num
+            item.danwei = _that.obj.danwei
+            item.wlid = _that.obj.wlid
+          }
         })
+        this.$store.dispatch('saveplantlist', _that.getlist)
+        router.push({path: '/deliveryPlanList'})
+      },
+      // 标识name
+      getbsname(code) {
+        for (let o of this.list1) {
+          if (code === o.key) {
+            this.obj.bsname = o.value
+          }
+        }
       }
     }
   }

@@ -64,7 +64,7 @@
     methods: {
       onesave() {
         this.$store.dispatch('addbomlist', this.obj)
-        router.push({path: '/BOMList'})
+        router.go(-1)
       },
       twosave() {
         let _that = this

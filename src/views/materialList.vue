@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="card_footer" slot="footer">
-          <x-button type="primary" mini plain class="card_footer_but" text="交货计划" @click.native="jhevent"></x-button>
+          <x-button type="primary" mini plain class="card_footer_but" text="交货计划" @click.native="jhevent(pl.id)"></x-button>
           <x-button type="primary" mini plain class="card_footer_but" text="BOM" @click.native="bomevent(pl.id)"></x-button>
           <x-button type="primary" mini plain class="card_footer_but" text="删除" @click.native="del(pl)"></x-button>
         </div>
@@ -78,12 +78,8 @@
         router.push({path: '/', query: {pl: JSON.stringify(pl)}})
       },
       // 交货计划页跳转
-      jhevent() {
-        router.push({path: '/deliveryPlanList'})
-      },
-      // BOM页跳转
-      bomevent(id) {
-        router.push({path: '/bomList', query: {id: JSON.stringify(id)}})
+      jhevent(id) {
+        router.push({path: '/deliveryPlanList', query: {id: JSON.stringify(id)}})
       },
       // 删除物料
       del(p) {
