@@ -1,16 +1,15 @@
 <template>
   <div>
-    <!--<group>-->
-      <!--<cell v-for="kqobj in listce" :key="kqobj.id" :title="kqobj" is-link @click.native="toDetail(kqobj)"></cell>-->
-    <!--</group>-->
     <group title="BOM明细" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <selector title="组件类型" v-model="name" :options="list1"></selector>
-      <x-input title="物料" v-model="namevalue"></x-input>
-      <x-input title="单吨用量" v-model="namevalue"></x-input>
-      <cell title="单位" v-model="namevalue" value-align="left"></cell>
+      <cell title="组件类型" v-model="obj.type" value-align="left"></cell>
+      <x-input title="物料" v-model="obj.wl"></x-input>
+      <x-input title="单吨用量" v-model="obj.pernum"></x-input>
+      <cell title="单位" v-model="obj.danwei" value-align="left"></cell>
+      <cell v-show="idflag" v-model="ids"></cell>
     </group>
     <flexbox class="footerButton" style="z-index: 2;">
-      <flexbox-item @click.native="saveevent" style="color:#FF8519;">保存</flexbox-item>
+      <flexbox-item v-if="flag === '0'" @click.native="onesave" style="color:#FF8519;">保存</flexbox-item>
+      <flexbox-item v-if="flag === '1'" @click.native="twosave" style="color:#FF8519;">保存</flexbox-item>
     </flexbox>
   </div>
 </template>
@@ -20,6 +19,7 @@
   import whole from '@/lib/whole';
   import axios from 'axios';
   import router from '../router';
+  import {mapGetters} from 'vuex'
 
   export default {
     components: {
@@ -27,20 +27,58 @@
     },
     data() {
       return {
-        list1: [
-          {key: '01', value: '日'},
-          {key: '02', value: '周'},
-          {key: '03', value: '月'}
-        ],
-        name: '03',
-        namevalue: '真的'
+        idflag: false,
+        flag: '0',
+        idf: '',
+        obj: {
+          wlid: '',
+          id: '',
+          type: '原料',
+          wl: '',
+          pernum: '',
+          danwei: 'T'
+        }
       }
     },
-    created() {},
+    computed: {
+      ...mapGetters({
+        getlist: 'getbomlist'
+      }),
+      // 赋予对象唯一标识
+      ids: function () {
+        this.obj.id = new Date().getTime()
+        return this.obj.id
+      }
+    },
+    created() {
+      this.obj.id = new Date().getTime()
+      this.obj.wlid = JSON.parse(this.$route.query.wlid);
+      let bomobj = JSON.parse(this.$route.query.bomobj);
+      if (bomobj !== null) {
+        this.obj = bomobj.pl
+        this.obj.wlid = bomobj.wlid
+        this.idf = bomobj.pl.id
+        this.flag = '1'
+      }
+    },
     methods: {
-      saveevent() {
-        let _that = this;
-        router.push({path: '/BOMList', query: {codeData: JSON.stringify(_that.jkData)}})
+      onesave() {
+        this.$store.dispatch('addbomlist', this.obj)
+        router.push({path: '/BOMList'})
+      },
+      twosave() {
+        let _that = this
+        _that.getlist.forEach(item => {
+          if (item.id === _that.idf) {
+            item.type = _that.obj.type
+            item.wl = _that.obj.wl
+            item.pernum = _that.obj.pernum
+            item.danwei = _that.obj.danwei
+            item.wlid = _that.obj.wlid
+          }
+        })
+        this.$store.dispatch('savebomlist', _that.getlist)
+        router.push({path: '/BOMList'})
       },
       saveinfo() {
         let _that = this;

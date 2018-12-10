@@ -8,7 +8,7 @@
       <x-input title="单价" v-model="info.price" text-align="left"></x-input>
       <selector title="货币" placeholder="请选择" v-model="info.coin" :options="huobiList"></selector>
       <cell title="金额" v-model="money" value-align="left"></cell>
-      <selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory"></selector>
+      <selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory" @on-change="getgcname"></selector>
       <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.zlrequest"></x-textarea>
       <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="info.jsrequest"></x-textarea>
       <cell v-show="idflag" v-model="ids"></cell>
@@ -86,7 +86,6 @@
     },
     created() {
       this.getlistInfo();
-      this.getname();
       // 接收列表单个对象详情数据
       let pl = JSON.parse(this.$route.query.pl);
       if (pl !== null) {
@@ -132,14 +131,6 @@
             })
           }
         })
-      },
-      // 工厂name
-      getname() {
-        for (let o of this.tplantList) {
-          if (this.info.factory === o.key) {
-            this.info.plant = o.value
-          }
-        }
       },
       // 列表页面下一步跳转
       one() {
@@ -222,12 +213,21 @@
             item.coin = _that.info.coin
             item.cash = _that.info.cash
             item.factory = _that.info.factory
+            item.plant = _that.info.plant
             item.zlrequest = _that.info.zlrequest
             item.jsrequest = _that.info.jsrequest
           }
         })
         this.$store.dispatch('savemateriallist', _that.getmateriallist)
         router.push({path: '/materialList'})
+      },
+      // 工厂name
+      getgcname(code) {
+        for (let o of this.tplantList) {
+          if (code === o.key) {
+            this.info.plant = o.value
+          }
+        }
       }
     }
   }

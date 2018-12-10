@@ -1,17 +1,16 @@
 <template>
   <div>
-    <group title="计划列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card class="card">
-        <!--:header="{title:newname}" @on-click-header="mdevent"-->
-        <div class="card_header" slot="header" @click="mdevent">{{certificate}}</div>
-        <div slot="content" class="card_content" @click="mdevent">
+    <group title="BOM列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
+      <card v-if="flag === '1'" v-for="(pl, index) in getlist" :key="index">
+        <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.wl}}</div>
+        <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
-            <span>30</span>
+            <span>{{pl.pernum}}</span>
             <br/>
             <span class="content_color">单吨用量</span>
           </div>
           <div class="vux-1px-r">
-            <span>原料</span>
+            <span>{{pl.type}}</span>
             <br/>
             <span class="content_color">组件类型</span>
           </div>
@@ -20,6 +19,9 @@
           <x-button type="primary" mini plain class="card_footer_but" text="删除"></x-button>
         </div>
       </card>
+      <div class="sznull" v-if="flag === '0'">
+        <p >空空如也~请新增BOM</p>
+      </div>
     </group>
     <box gap="10px 80px">
       <flexbox>
@@ -49,9 +51,10 @@
     Flexbox,
     FlexboxItem
   } from 'vux'
+  import router from '../router';
+  import {mapGetters} from 'vuex'
   // import whole from '@/lib/whole';
   // import axios from 'axios';
-  import router from '../router';
 
   export default {
     components: {
@@ -59,23 +62,49 @@
     },
     data() {
       return {
-        certificate: '物料'
+        wlid: '',
+        flag: '0',
+        listDate: []
       }
     },
+    computed: {
+      ...mapGetters({
+        getlist: 'getbomlist'
+      })
+    },
     created() {
+      alert(JSON.stringify(this.getlist))
+      this.wlid = JSON.parse(this.$route.query.id);
+      alert('wlid')
+      alert(this.wlid)
+      if (this.getlist.length > 0) {
+        for (let o of this.getlist) {
+          if (o.wlid === this.wlid) {
+            this.listDate.push(o)
+            this.flag = '1'
+          } else {
+            this.flag = '0'
+          }
+        }
+      } else {
+        this.flag = '0'
+      }
     },
     methods: {
-      mdevent () {
-        let _that = this;
-        router.push({path: '/bom', query: {codeData: JSON.stringify(_that.jkData)}})
+      // 修改BOM页
+      mdevent (pl) {
+        let bomobj = {pl: pl, wlid: this.wlid}
+        router.push({path: '/bom', query: {bomobj: JSON.stringify(bomobj)}})
       },
+      // 新增bom
       xzevent() {
-        let _that = this;
-        router.push({path: '/bom', query: {codeData: JSON.stringify(_that.jkData)}})
+        alert('新增')
+        alert(this.wlid)
+        router.push({path: '/bom', query: {wlid: JSON.stringify(this.wlid)}})
       },
+      // 保存
       saveevent() {
-        let _that = this;
-        router.push({path: '/materialList', query: {codeData: JSON.stringify(_that.jkData)}})
+        router.push({path: '/materialList'})
       }
     }
   }
@@ -129,5 +158,11 @@
   }
   .card_footer_but {
     border-radius: 20px;
+  }
+  .sznull {
+    text-align: center;
+    font-size: 20px;
+    background-color: #f4f4f4;
+    border: none;
   }
 </style>

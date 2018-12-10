@@ -1,7 +1,7 @@
 <template>
   <div>
     <group title="物料需求列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card class="card" v-for="pl of getlist" :key="pl.id">
+      <card class="card" v-for="(pl, index) in getlist" :key="index">
         <!--:header="{title:newname}" @on-click-header="mdevent"-->
         <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.wl}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
@@ -18,8 +18,8 @@
         </div>
         <div class="card_footer" slot="footer">
           <x-button type="primary" mini plain class="card_footer_but" text="交货计划" @click.native="jhevent"></x-button>
-          <x-button type="primary" mini plain class="card_footer_but" text="BOM" @click.native="bomevent"></x-button>
-          <x-button type="primary" mini plain class="card_footer_but" text="删除" @click.native="del(pl.id)"></x-button>
+          <x-button type="primary" mini plain class="card_footer_but" text="BOM" @click.native="bomevent(pl.id)"></x-button>
+          <x-button type="primary" mini plain class="card_footer_but" text="删除" @click.native="del(pl)"></x-button>
         </div>
       </card>
     </group>
@@ -61,9 +61,7 @@
     },
     data() {
       return {
-        wl: '',
-        num: '',
-        factory: ''
+        tplantList: []
       }
     },
     computed: {
@@ -72,10 +70,7 @@
       })
     },
     created() {
-      // let materiallist = JSON.parse(this.$route.query.codeData);
-      // this.wl = materiallist.wl
-      // this.num = materiallist.num
-      // this.factory = materiallist.factory
+      // alert(JSON.stringify(this.getlist))
     },
     methods: {
       // 单个物料详情跳转
@@ -84,29 +79,24 @@
       },
       // 交货计划页跳转
       jhevent() {
-        let _that = this;
-        router.push({path: '/deliveryPlanList', query: {codeData: JSON.stringify(_that.jkData)}})
+        router.push({path: '/deliveryPlanList'})
       },
       // BOM页跳转
-      bomevent() {
-        let _that = this;
-        router.push({path: '/bomList', query: {codeData: JSON.stringify(_that.jkData)}})
+      bomevent(id) {
+        router.push({path: '/bomList', query: {id: JSON.stringify(id)}})
       },
       // 删除物料
-      del(id) {
-        let _that = this
-        _that.getlist = _that.getlist.filter(item => item.id !== id)
-        _that.$store.dispatch('savemateriallist', _that.getlist)
+      del(p) {
+        this.getlist = this.getlist.filter(item => item !== p)
+        this.$store.dispatch('savemateriallist', this.getlist)
       },
       // 新增物料
       xzevent() {
-        let _that = this;
-        router.push({path: '/', query: {codeData: JSON.stringify(_that.jkData)}})
+        router.push({path: '/'})
       },
       // 下一步
       nextevent() {
-        let _that = this;
-        router.push({path: '/materialHeader', query: {codeData: JSON.stringify(_that.jkData)}})
+        router.push({path: '/materialHeader'})
       }
     }
   }
@@ -139,6 +129,7 @@
   .card_content {
     display: flex;
     height: 50px;
+    margin-bottom: 3px;
   }
 
   .card_content > div {
