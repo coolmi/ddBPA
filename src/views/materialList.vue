@@ -1,8 +1,7 @@
 <template>
   <div>
     <group title="物料需求列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card class="card" v-for="(pl, index) in getlist" :key="index">
-        <!--:header="{title:newname}" @on-click-header="mdevent"-->
+      <card class="card" v-if="getlist.length > 0" v-for="(pl, index) in getlist" :key="index">
         <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.wl}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
@@ -18,10 +17,13 @@
         </div>
         <div class="card_footer" slot="footer">
           <x-button type="primary" mini plain class="card_footer_but" text="交货计划" @click.native="jhevent(pl.id)"></x-button>
-          <x-button type="primary" mini plain class="card_footer_but" text="BOM" @click.native="bomevent(pl.id)"></x-button>
+          <!--<x-button type="primary" mini plain class="card_footer_but" text="BOM" @click.native="bomevent(pl.id)"></x-button>-->
           <x-button type="primary" mini plain class="card_footer_but" text="删除" @click.native="del(pl)"></x-button>
         </div>
       </card>
+      <div class="sznull" v-else>
+        <p >空空如也~请新增BOM</p>
+      </div>
     </group>
     <box gap="10px 80px">
       <flexbox>
@@ -79,12 +81,26 @@
       },
       // 交货计划页跳转
       jhevent(id) {
-        router.push({path: '/deliveryPlanList', query: {id: JSON.stringify(id)}})
+        this.$store.dispatch('addmaterialid', id)
+        router.push({path: '/deliveryPlanList'})
       },
+      // 删除方法(找索引)
+      shan (p) {
+        for (let i = 0; i < this.getlist.length; i++) {
+          if (this.getlist[i] === p) {
+            return i;
+          }
+        }
+        return -1;
+      },
+      // 删除方法(删除元素)
       // 删除物料
       del(p) {
-        this.getlist = this.getlist.filter(item => item !== p)
-        this.$store.dispatch('savemateriallist', this.getlist)
+        let index = this.shan(p)
+        if (index > -1) {
+          this.getlist.splice(index, 1)
+        }
+        // this.$store.dispatch('savemateriallist', this.getlist)
       },
       // 新增物料
       xzevent() {
@@ -145,5 +161,11 @@
   }
   .card_footer_but {
     border-radius: 20px;
+  }
+  .sznull {
+    text-align: center;
+    font-size: 20px;
+    background-color: #f4f4f4;
+    border: none;
   }
 </style>

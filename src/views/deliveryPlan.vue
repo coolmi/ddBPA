@@ -1,11 +1,8 @@
 <template>
   <div>
-    <!--<group>-->
-      <!--<cell v-for="kqobj in listce" :key="kqobj.id" :title="kqobj" is-link @click.native="toDetail(kqobj)"></cell>-->
-    <!--</group>-->
     <group title="交货计划明细" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
       <selector title="期间标识" v-model="obj.qjbs" :options="list1" @on-change="getbsname"></selector>
-      <datetime title="交货日期" v-model="obj.jhrq" format="YYYY-MM-DD"></datetime>
+      <datetime title="交货日期" v-model="obj.jhrq" placeholder="请输入交货日期" format="YYYY-MM-DD"></datetime>
       <x-input title="数量" v-model="obj.num"></x-input>
       <cell title="单位" v-model="obj.danwei" value-align="left"></cell>
       <cell v-show="idflag" v-model="ids"></cell>
@@ -49,7 +46,8 @@
     },
     computed: {
       ...mapGetters({
-        getlist: 'getplantlist'
+        getlist: 'getplantlist', // 交货计划
+        getwlid: 'getmaterialid' // 物料id
       }),
       // 赋予对象唯一标识
       ids: function () {
@@ -58,31 +56,30 @@
       }
     },
     created() {
-      this.obj.id = new Date().getTime()
-      this.obj.wlid = JSON.parse(this.$route.query.wlid);
-      let planobj = JSON.parse(this.$route.query.planobj);
-      console.log(planobj)
-      if (planobj !== null) {
-        this.obj = planobj.pl
-        this.obj.wlid = planobj.wlid
-        this.idf = planobj.pl.id
+      this.obj.wlid = this.getwlid; // 物料id赋给交货计划对象中
+      let pl = JSON.parse(this.$route.query.pl);
+      if (pl !== null) {
+        this.obj = pl
+        this.idf = pl.id // 通过交货计划对象id修改
         this.flag = '1'
       }
     },
     methods: {
+      // 保存
       oneevent() {
         this.$store.dispatch('addplantlist', this.obj)
-        router.go(-1)
+        router.push({path: '/deliveryPlanList'})
       },
+      // 修改保存
       twoevent() {
         let _that = this
         _that.getlist.forEach(item => {
-          if (item.id === _that.idf) {
-            item.qjbs = _that.obj.qjbs
+          if (_that.idf === item.id) {
+            item.wlid = _that.obj.wlid
             item.jhrq = _that.obj.jhrq
             item.num = _that.obj.num
+            item.qjbs = _that.obj.qjbs
             item.danwei = _that.obj.danwei
-            item.wlid = _that.obj.wlid
           }
         })
         this.$store.dispatch('saveplantlist', _that.getlist)

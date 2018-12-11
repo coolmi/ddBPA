@@ -2,13 +2,13 @@
   <div>
     <group title="物料明细信息" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
       <selector title="物料类别" placeholder="请选择" v-model="info.wllb" :options="protypeList"></selector>
-      <x-input title="物料" v-model="info.wl" text-align="left"></x-input>
+      <x-input title="物料" v-model="info.wl" text-align="left" @click="getwlInfo"></x-input>
       <x-input title="数量" v-model="info.num" text-align="left"></x-input>
       <cell title="单位" v-model="info.danwei" value-align="left"></cell>
       <x-input title="单价" v-model="info.price" text-align="left"></x-input>
       <selector title="货币" placeholder="请选择" v-model="info.coin" :options="huobiList"></selector>
       <cell title="金额" v-model="money" value-align="left"></cell>
-      <selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory" @on-change="getgcname"></selector>
+      <!--<selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory" @on-change="getgcname"></selector>-->
       <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.zlrequest"></x-textarea>
       <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="info.jsrequest"></x-textarea>
       <cell v-show="idflag" v-model="ids"></cell>
@@ -65,8 +65,8 @@
           price: '',
           coin: '',
           cash: '',
-          factory: '',
-          plant: '',
+          // factory: '',
+          // plant: '',
           zlrequest: '',
           jsrequest: '',
           id: ''
@@ -75,7 +75,7 @@
         idflag: false,
         flag: '0',
         protypeList: [], // 物料类别
-        tplantList: [], // 工厂
+        // tplantList: [], // 工厂
         huobiList: [
           {key: '人民币', value: '人民币'},
           {key: '美元', value: '美元'},
@@ -122,14 +122,19 @@
               }
               _that.protypeList.push(protypeobj)
             })
-            res.data.tplantList.forEach(function (item) {
-              let tplantobj = {
-                key: item.PLANT,
-                value: item.PLANT_DESC
-              }
-              _that.tplantList.push(tplantobj)
-            })
+            // res.data.tplantList.forEach(function (item) {
+            //   let tplantobj = {
+            //     key: item.PLANT,
+            //     value: item.PLANT_DESC
+            //   }
+            //   _that.tplantList.push(tplantobj)
+            // })
           }
+        })
+      },
+      getwlInfo () {
+        api.getmaterialinfos(this.info.wl, this.info.wllb, function (res) {
+          console.log('================' + res)
         })
       },
       // 列表页面下一步跳转
@@ -152,10 +157,6 @@
         // }
         // if (_that.info.coin === '') {
         //   whole.showTop('货币不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.factory === '') {
-        //   whole.showTop('工厂不能为空哦~');
         //   return;
         // }
         // if (_that.info.zlrequest === '') {

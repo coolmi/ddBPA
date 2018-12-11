@@ -76,7 +76,7 @@ export default {
       })
     },
   /**
-   * 获取列表数据
+   * 获取明细信息列表数据
    * @param cb
    */
   getlistData: function (cb) {
@@ -88,23 +88,11 @@ export default {
     })
   },
   /**
-  * 获取紧急联系人
+  * 获取物料模糊查询信息
   * @param cb
   */
-  getjjData: function (cb) {
-    axios.get('/dingding/es/emcontact')
-      .then((res) => {
-        cb(res);
-      }).catch((error) => {
-      return Promise.reject(error)
-    })
-  },
-  /**
-   * 获取管理员信息
-   * @param cb
-   */
-  getadmin: function (cb) {
-    axios.get('/dingding/es/hradmin')
+  getmaterialinfos: function (name, category, cb) {
+    axios.get('/api/sopheader/sop/apply/sopheader/json/listproduct?name=' + name + '&category=' + category)
       .then((res) => {
         cb(res);
       }).catch((error) => {
