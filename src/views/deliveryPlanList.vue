@@ -5,12 +5,12 @@
         <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.jhrq}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
-            <span>{{pl.num}}</span>
+            <span>{{pl.wmeng}}</span>
             <br/>
             <span class="content_color">数量</span>
           </div>
           <div class="vux-1px-r">
-            <span>{{pl.bsname}}</span>
+            <span>{{pl.prgrs}}</span>
             <br/>
             <span class="content_color">期间标识</span>
           </div>

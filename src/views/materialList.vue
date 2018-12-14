@@ -4,12 +4,12 @@
       <card class="card" v-if="getlist.length > 0" v-for="(pl, index) in getlist" :key="index">
         <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
-            <span>{{pl.wl}}</span>
+            <span>{{pl.material}}</span>
             <br/>
             <span class="content_color">物料</span>
           </div>
           <div class="vux-1px-r">
-            <span>{{pl.num}}</span>
+            <span>{{pl.zmeng}}</span>
             <br/>
             <span class="content_color">数量</span>
           </div>

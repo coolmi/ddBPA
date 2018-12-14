@@ -1,10 +1,10 @@
 <template>
   <div>
     <group title="交货计划明细" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <selector title="期间标识" v-model="obj.qjbs" :options="list1" @on-change="getbsname"></selector>
-      <datetime title="交货日期" v-model="obj.jhrq" placeholder="请输入交货日期" format="YYYY-MM-DD"></datetime>
-      <x-input title="数量" v-model="obj.num"></x-input>
-      <cell title="单位" v-model="obj.danwei" value-align="left"></cell>
+      <selector title="期间标识" v-model="obj.prgrs" :options="list1" @on-change="getbsname"></selector>
+      <datetime title="交货日期" v-model="obj.etdat" placeholder="请输入交货日期" format="YYYY-MM-DD"></datetime>
+      <x-input title="数量" v-model="obj.wmeng"></x-input>
+      <cell title="单位" v-model="obj.vrkme" value-align="left"></cell>
       <cell v-show="idflag" v-model="ids"></cell>
     </group>
     <flexbox class="footerButton" style="z-index: 2;">
@@ -33,11 +33,11 @@
         obj: {
           wlid: '',
           id: '',
-          qjbs: '01',
+          prgrs: '01',
           bsname: '',
-          jhrq: '',
-          num: '',
-          danwei: 'T'
+          etdat: '',
+          wmeng: '',
+          vrkme: 'T'
         },
         idflag: false,
         flag: '0',
@@ -76,10 +76,10 @@
         _that.getlist.forEach(item => {
           if (_that.idf === item.id) {
             item.wlid = _that.obj.wlid
-            item.jhrq = _that.obj.jhrq
-            item.num = _that.obj.num
-            item.qjbs = _that.obj.qjbs
-            item.danwei = _that.obj.danwei
+            item.etdat = _that.obj.etdat
+            item.wmeng = _that.obj.wmeng
+            item.prgrs = _that.obj.prgrs
+            item.vrkme = _that.obj.vrkme
           }
         })
         this.$store.dispatch('saveplantlist', _that.getlist)
