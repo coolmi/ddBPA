@@ -2,7 +2,8 @@ export default {
   state: {
     materialinfo: {},
     materiallist: [],
-    id: ''
+    id: '',
+    wllb: ''
   },
 
   actions: {
@@ -11,6 +12,9 @@ export default {
     },
     addmaterialid({commit}, id) {
       commit('ADD_MATERIALID', id);
+    },
+    addwllb({commit}, wllb) {
+      commit('ADD_WLLB', wllb);
     },
     clearmaterialinfo({commit}) {
       commit('CLEAR_MATERIAINFO');
@@ -30,6 +34,9 @@ export default {
     'ADD_MATERIALID'(state, id) {
       state.id = id
     },
+    'ADD_WLLB'(state, wllb) {
+      state.wllb = wllb
+    },
     'CLEAR_MATERIAINFO'(state) {
       state.materialinfo = {}
     },
@@ -43,6 +50,7 @@ export default {
   getters: {
     getmaterialinfo: state => state.materialinfo,
     getmateriallist: state => state.materiallist,
-    getmaterialid: state => state.id
+    getmaterialid: state => state.id,
+    getwllb: state => state.wllb
   }
 }

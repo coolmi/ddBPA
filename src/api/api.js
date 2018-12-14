@@ -92,7 +92,31 @@ export default {
   * @param cb
   */
   getmaterialinfos: function (name, category, cb) {
-    axios.get('/api/sopheader/sop/apply/sopheader/json/listproduct?name=' + name + '&category=' + category)
+    axios.get('/api/sopheader/json/listproduct?name=' + name + '&category=' + category)
+      .then((res) => {
+        cb(res);
+      }).catch((error) => {
+      return Promise.reject(error)
+    })
+  },
+  /**
+   * 获取客户模糊查询信息
+   * @param cb
+   */
+  getmcustomerinfos: function (saleArea, name1, cb) {
+    axios.get('/api/sopheader/json/listcustomer?saleArea=' + saleArea + '&name1=' + name1)
+      .then((res) => {
+        cb(res);
+      }).catch((error) => {
+      return Promise.reject(error)
+    })
+  },
+  /**
+   * 保存
+   * @param cb
+   */
+  savematerial: function (params, cb) {
+    axios.post('/api/sopheader/sop/apply/sopheader/saveJson', params)
       .then((res) => {
         cb(res);
       }).catch((error) => {

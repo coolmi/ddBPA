@@ -2,11 +2,12 @@
   <div>
     <group title="物料明细信息" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
       <selector title="物料类别" placeholder="请选择" v-model="info.wllb" :options="protypeList"></selector>
-      <x-input title="物料" v-model="info.wl" text-align="left" @click="getwlInfo"></x-input>
+      <x-input type="text" title="搜索" placeholder="请输入物料关键词" text-align="center" v-model="wuliao"/>
+      <selector title="物料" placeholder="物料数据生成中..." v-model="info.wl" :options="wllist"></selector>
       <x-input title="数量" v-model="info.num" text-align="left"></x-input>
       <cell title="单位" v-model="info.danwei" value-align="left"></cell>
       <x-input title="单价" v-model="info.price" text-align="left"></x-input>
-      <selector title="货币" placeholder="请选择" v-model="info.coin" :options="huobiList"></selector>
+      <selector title="货币" placeholder="请选择" direction="ltr" v-model="info.coin" :options="huobiList" :readonly="hbflag"></selector>
       <cell title="金额" v-model="money" value-align="left"></cell>
       <!--<selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory" @on-change="getgcname"></selector>-->
       <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.zlrequest"></x-textarea>
@@ -35,10 +36,9 @@
     Selector
   } from 'vux'
   import api from 'api';
-  // import whole from '@/lib/whole'
+  import whole from '@/lib/whole'
   import router from '../router'
   import {mapGetters} from 'vuex'
-  import vSearch from '@/components/searchChecker';
 
   export default {
     components: {
@@ -52,7 +52,6 @@
       XTextarea,
       PopupPicker,
       Cell,
-      vSearch,
       Selector
     },
     data() {
@@ -64,40 +63,34 @@
           danwei: 'T',
           price: '',
           coin: '',
-          cash: '',
-          // factory: '',
-          // plant: '',
+          cash: '', // 金额
           zlrequest: '',
           jsrequest: '',
           id: ''
+          // factory: '',
+          // plant: '',,
         },
-        idf: '',
-        idflag: false,
+        wuliao: '', // 物料监听关键字,支持模糊查询
+        idf: '', // id接收
+        idflag: false, // id状态标识
         flag: '0',
+        hbflag: 'false',
+        wllist: [], // 物料
         protypeList: [], // 物料类别
+        huobiList: [] // 货币
         // tplantList: [], // 工厂
-        huobiList: [
-          {key: '人民币', value: '人民币'},
-          {key: '美元', value: '美元'},
-          {key: '日元', value: '日元'},
-          {key: '欧元', value: '欧元'}
-        ]
       }
     },
-    created() {
-      this.getlistInfo();
-      // 接收列表单个对象详情数据
-      let pl = JSON.parse(this.$route.query.pl);
-      if (pl !== null) {
-        this.info = pl
-        this.idf = pl.id
-        this.flag = '1'
+    watch: {
+      wuliao: function (val) {
+        this.getwlInfo()
       }
     },
     computed: {
       ...mapGetters({
         getmateriallist: 'getmateriallist'
       }),
+      // 计算金额
       money: function () {
         this.info.cash = this.info.price * this.info.num
         return this.info.cash
@@ -108,6 +101,18 @@
         return this.info.id
       }
     },
+    created() {
+      let _that = this
+      _that.getlistInfo();
+      _that.getsamename();
+      // 接收列表单个对象详情数据
+      let pl = JSON.parse(_that.$route.query.pl);
+      if (pl !== null) {
+        _that.info = pl
+        _that.idf = pl.id
+        _that.flag = '1'
+      }
+    },
     methods: {
       // 获取下拉数据
       getlistInfo() {
@@ -115,6 +120,7 @@
         api.getlistData(function (res) {
           if (res) {
             console.log(res);
+            // 物料类别
             res.data.protypeList.forEach(function (item) {
               let protypeobj = {
                 key: item.LABEL,
@@ -122,6 +128,15 @@
               }
               _that.protypeList.push(protypeobj)
             })
+            // 货币
+            res.data.currencyList.forEach(function (item) {
+              let hbobj = {
+                key: item.LABEL,
+                value: item.VALUE
+              }
+              _that.huobiList.push(hbobj)
+            })
+            // 工厂
             // res.data.tplantList.forEach(function (item) {
             //   let tplantobj = {
             //     key: item.PLANT,
@@ -132,13 +147,28 @@
           }
         })
       },
+      // 获取物料模糊查询数据
       getwlInfo () {
-        api.getmaterialinfos(this.info.wl, this.info.wllb, function (res) {
-          console.log('================' + res)
+        let _that = this
+        api.getmaterialinfos(_that.wuliao, _that.info.wllb, function (res) {
+          if (res) {
+            _that.wllist = []
+            res.data.productList.forEach(function (item) {
+              let wlobj = {
+                key: item.label,
+                value: item.value
+              }
+              _that.wllist.push(wlobj)
+            })
+            if (_that.wllist.length === 0) {
+              whole.showTop('查询无结果!请重试')
+            }
+          }
         })
       },
       // 列表页面下一步跳转
       one() {
+        let _that = this
         // if (_that.info.wllb === '') {
         //   whole.showTop('物料类别不能为空哦~');
         //   return;
@@ -167,10 +197,22 @@
         //   whole.showTop('技术工艺要求不能为空哦~');
         //   return;
         // }
-        this.$store.dispatch('addmateriallist', this.info)
+        // if (_that.getmateriallist.length > 0) {
+        //   _that.getmateriallist.forEach(function (item) {
+        //     if (item.coin !== '') {
+        //       if (_that.info.coin !== item.coin) {
+        //         let name = _that.gethbname(item.coin)
+        //         whole.showTop('货币要保持一致!请选择' + name + '!')
+        //         return;
+        //       } else {
+        //       }
+        //     }
+        //   })
+        // }
+        _that.$store.dispatch('addmateriallist', _that.info)
         router.push({path: '/materialList'})
       },
-      // 列表页面保存跳转
+      // 物料详情页面修改保存跳转
       two() {
         let _that = this;
         // if (_that.info.wllb === '') {
@@ -213,14 +255,34 @@
             item.price = _that.info.price
             item.coin = _that.info.coin
             item.cash = _that.info.cash
-            item.factory = _that.info.factory
-            item.plant = _that.info.plant
             item.zlrequest = _that.info.zlrequest
             item.jsrequest = _that.info.jsrequest
           }
         })
         this.$store.dispatch('savemateriallist', _that.getmateriallist)
         router.push({path: '/materialList'})
+      },
+      // 货币处理
+      gethbname (val) {
+        for (let h of this.huobiList) {
+          if (val === h.key) {
+            return h.value
+          }
+        }
+      },
+      // 货币一致
+      getsamename () {
+        let _that = this
+        if (_that.getmateriallist.length > 0) {
+          _that.getmateriallist.forEach(function (item) {
+            if (item.coin !== '') {
+              _that.info.coin = item.coin
+              _that.hbflag = true;
+            }
+          })
+        } else {
+          _that.hbflag = false;
+        }
       },
       // 工厂name
       getgcname(code) {

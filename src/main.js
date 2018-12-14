@@ -9,6 +9,9 @@ import api from 'api'
 import dingUser from '@/lib/dingUser'
 import whole from '@/lib/whole'
 
+import MintUI from 'mint-ui'
+Vue.use(MintUI);
+import 'mint-ui/lib/style.min.css'
 import Navigation from '@/nav'
 Vue.use(Navigation, {router}) // 后退不刷新
 

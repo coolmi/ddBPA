@@ -2,17 +2,16 @@
   <div>
     <group title="物料需求列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
       <card class="card" v-if="getlist.length > 0" v-for="(pl, index) in getlist" :key="index">
-        <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.wl}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
+          <div class="vux-1px-r">
+            <span>{{pl.wl}}</span>
+            <br/>
+            <span class="content_color">物料</span>
+          </div>
           <div class="vux-1px-r">
             <span>{{pl.num}}</span>
             <br/>
             <span class="content_color">数量</span>
-          </div>
-          <div class="vux-1px-r">
-            <span>{{pl.plant}}</span>
-            <br/>
-            <span class="content_color">工厂</span>
           </div>
         </div>
         <div class="card_footer" slot="footer">
@@ -55,11 +54,10 @@
   import {mapGetters} from 'vuex'
   // import axios from 'axios';
   import router from '../router';
-  import vSearch from '@/components/searchChecker';
 
   export default {
     components: {
-      Group, PopupPicker, XInput, Datetime, Cell, Card, XButton, Box, vSearch, Flexbox, FlexboxItem
+      Group, PopupPicker, XInput, Datetime, Cell, Card, XButton, Box, Flexbox, FlexboxItem
     },
     data() {
       return {
@@ -127,7 +125,7 @@
   }
 
   .card {
-    height: 130px;
+    height: 120px;
   }
 
   .card_header {
@@ -140,8 +138,10 @@
 
   .card_content {
     display: flex;
-    height: 50px;
-    margin-bottom: 3px;
+    height: 60px;
+    /*margin-bottom: 3px;*/
+    margin-top: 5px;
+    /*border: 1px red solid;*/
   }
 
   .card_content > div {
@@ -156,8 +156,10 @@
 
   .card_footer {
     /*border: 1px blue solid;*/
-    height: 50px;
+    height: 30px;
+    line-height: 30px;
     text-align: center;
+    /*margin-bottom: 30px;*/
   }
   .card_footer_but {
     border-radius: 20px;
