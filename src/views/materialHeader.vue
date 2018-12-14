@@ -7,8 +7,8 @@
       <datetime title="创建时间" v-model="info.createtime" format="YYYY-MM-DD"></datetime>
       <selector title="业务类别" placeholder="请选择" v-model="info.ywtype" :options="ywlist"></selector>
       <selector title="需求类型" placeholder="请选择" v-model="info.xqtype" :options="xqlist"></selector>
-      <!--<x-input type="text"  title="搜索" placeholder="请输入销售范围关键词" text-align="center" v-model="sealfan"/>-->
-      <selector title="销售范围" placeholder="请选择" v-model="info.sealfan" :options="xslist"></selector>
+      <x-input type="text"  title="搜索" placeholder="请输入销售范围关键词" text-align="center" v-model="sealfan"/>
+      <selector title="销售范围" placeholder="销售范围数据生成中..." v-model="info.sealfan" :options="xslist"></selector>
       <x-input type="text" title="搜索" placeholder="请输入客户关键词" text-align="center" v-model="kehu"/>
       <selector title="客户名称" placeholder="客户数据生成中..." v-model="info.customname" :options="customerlist"></selector>
       <selector title="货币" placeholder="请选择" v-model="info.coin" :options="huobiList" :readonly="hbflag"></selector>
@@ -60,7 +60,7 @@
         hbflag: 'false',
         ywlist: [], // 业务类别
         xqlist: [], // 需求类型
-        xslist: [], // 销售范围
+        xsfanlist: [], // 销售范围
         huobiList: [], // 货币
         customerlist: [] // 客户
       }
@@ -76,7 +76,18 @@
     computed: {
       ...mapGetters({
         getmateriallist: 'getmateriallist'
-      })
+      }),
+      xslist: function() {
+        let search = this.sealfan;
+        if (search) {
+          return this.xsfanlist.filter(function(product) {
+            return Object.keys(product).some(function(key) {
+              return String(product[key]).toLowerCase().indexOf(search) > -1
+            })
+          })
+        }
+        return this.xsfanlist.length === 0 ? ['暂无数据'] : this.xsfanlist;
+      }
     },
     created() {
       this.getlistInfo();
@@ -114,7 +125,7 @@
                 key: item.id,
                 value: item.text
               }
-              _that.xslist.push(xsobj)
+              _that.xsfanlist.push(xsobj)
             })
             // 货币
             res.data.currencyList.forEach(function (item) {
@@ -161,11 +172,32 @@
           _that.getmateriallist.forEach(function (item) {
             if (item.coin !== '') {
               _that.info.coin = item.coin
+              let name = _that.getcashname(_that.info.coin)
+              if (name === '人民币') {
+                _that.info.rate = '1'
+              }
+              if (name === '美元') {
+                _that.info.rate = '6.85'
+              }
+              if (name === '日元') {
+                _that.info.rate = '4.9571'
+              }
+              if (name === '欧元') {
+                _that.info.rate = '6.7189'
+              }
               _that.hbflag = true;
             }
           })
         } else {
           _that.hbflag = false;
+        }
+      },
+      // 货币处理
+      getcashname (val) {
+        for (let h of this.huobiList) {
+          if (val === h.key) {
+            return h.value
+          }
         }
       },
       // 返回
