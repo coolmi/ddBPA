@@ -1,17 +1,22 @@
 <template>
   <div>
     <group title="物料明细信息" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <selector title="物料类别" placeholder="请选择" v-model="info.wllb" :options="protypeList"></selector>
-      <x-input type="text" title="搜索" placeholder="请输入物料关键词" text-align="center" v-model="wuliao"/>
-      <selector title="物料" placeholder="物料数据生成中..." v-model="info.wl" :options="wllist"></selector>
-      <x-input title="数量" v-model="info.num" text-align="left"></x-input>
-      <cell title="单位" v-model="info.danwei" value-align="left"></cell>
+      <selector title="物料类别" placeholder="请选择" v-model="info.category" :options="protypeList"></selector>
+      <x-input type="text" placeholder="请输入物料关键词" text-align="center" v-model="wuliao" class="sousuo_in">
+        <span slot="label" class="sousuo_sp">
+          <img class="sousuo_img" src="/static/img/search.png">
+          搜索
+        </span>
+      </x-input>
+      <selector title="物料" placeholder="物料数据生成中..." v-model="info.material" :options="wllist"></selector>
+      <x-input title="数量" v-model="info.zmeng" text-align="left"></x-input>
+      <cell title="单位" v-model="info.meins" value-align="left"></cell>
       <x-input title="单价" v-model="info.price" text-align="left"></x-input>
-      <selector title="货币" placeholder="请选择" direction="ltr" v-model="info.coin" :options="huobiList" :readonly="hbflag"></selector>
-      <cell title="金额" v-model="money" value-align="left"></cell>
+      <selector title="货币" placeholder="请选择" direction="ltr" v-model="info.waerk" :options="huobiList" :readonly="hbflag"></selector>
+      <cell title="金额" v-model="amount" value-align="left"></cell>
       <!--<selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory" @on-change="getgcname"></selector>-->
-      <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.zlrequest"></x-textarea>
-      <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="info.jsrequest"></x-textarea>
+      <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.qualityreq"></x-textarea>
+      <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="info.techreq"></x-textarea>
       <cell v-show="idflag" v-model="ids"></cell>
     </group>
     <box gap="10px 80px">
@@ -57,15 +62,15 @@
     data() {
       return {
         info: {
-          wllb: '',
-          wl: '',
-          num: '',
-          danwei: 'T',
+          category: '',
+          material: '',
+          zmeng: '',
+          meins: 'T',
           price: '',
-          coin: '',
+          waerk: '',
           cash: '', // 金额
-          zlrequest: '',
-          jsrequest: '',
+          qualityreq: '',
+          techreq: '',
           id: ''
           // factory: '',
           // plant: '',,
@@ -74,7 +79,7 @@
         idf: '', // id接收
         idflag: false, // id状态标识
         flag: '0',
-        hbflag: 'false',
+        hbflag: false,
         wllist: [], // 物料
         protypeList: [], // 物料类别
         huobiList: [] // 货币
@@ -91,8 +96,8 @@
         getmateriallist: 'getmateriallist'
       }),
       // 计算金额
-      money: function () {
-        this.info.cash = this.info.price * this.info.num
+      amount: function () {
+        this.info.cash = this.info.price * this.info.zmeng
         return this.info.cash
       },
       // 赋予对象唯一标识
@@ -150,7 +155,7 @@
       // 获取物料模糊查询数据
       getwlInfo () {
         let _that = this
-        api.getmaterialinfos(_that.wuliao, _that.info.wllb, function (res) {
+        api.getmaterialinfos(_that.wuliao, _that.info.category, function (res) {
           if (res) {
             _that.wllist = []
             res.data.productList.forEach(function (item) {
@@ -169,15 +174,15 @@
       // 列表页面下一步跳转
       one() {
         let _that = this
-        // if (_that.info.wllb === '') {
+        // if (_that.info.category === '') {
         //   whole.showTop('物料类别不能为空哦~');
         //   return;
         // }
-        // if (_that.info.wl === '') {
+        // if (_that.info.material === '') {
         //   whole.showTop('物料不能为空哦~');
         //   return;
         // }
-        // if (_that.info.num === '') {
+        // if (_that.info.zmeng === '') {
         //   whole.showTop('数量不能为空哦~');
         //   return;
         // }
@@ -185,23 +190,23 @@
         //   whole.showTop('单价不能为空哦~');
         //   return;
         // }
-        // if (_that.info.coin === '') {
+        // if (_that.info.waerk === '') {
         //   whole.showTop('货币不能为空哦~');
         //   return;
         // }
-        // if (_that.info.zlrequest === '') {
+        // if (_that.info.qualityreq === '') {
         //   whole.showTop('质量要求不能为空哦~');
         //   return;
         // }
-        // if (_that.info.jsrequest === '') {
+        // if (_that.info.techreq === '') {
         //   whole.showTop('技术工艺要求不能为空哦~');
         //   return;
         // }
         // if (_that.getmateriallist.length > 0) {
         //   _that.getmateriallist.forEach(function (item) {
-        //     if (item.coin !== '') {
-        //       if (_that.info.coin !== item.coin) {
-        //         let name = _that.gethbname(item.coin)
+        //     if (item.waerk !== '') {
+        //       if (_that.info.waerk !== item.waerk) {
+        //         let name = _that.gethbname(item.waerk)
         //         whole.showTop('货币要保持一致!请选择' + name + '!')
         //         return;
         //       } else {
@@ -215,15 +220,15 @@
       // 物料详情页面修改保存跳转
       two() {
         let _that = this;
-        // if (_that.info.wllb === '') {
+        // if (_that.info.category === '') {
         //   whole.showTop('物料类别不能为空哦~');
         //   return;
         // }
-        // if (_that.info.wl === '') {
+        // if (_that.info.material === '') {
         //   whole.showTop('物料不能为空哦~');
         //   return;
         // }
-        // if (_that.info.num === '') {
+        // if (_that.info.zmeng === '') {
         //   whole.showTop('数量不能为空哦~');
         //   return;
         // }
@@ -231,7 +236,7 @@
         //   whole.showTop('单价不能为空哦~');
         //   return;
         // }
-        // if (_that.info.coin === '') {
+        // if (_that.info.waerk === '') {
         //   whole.showTop('货币不能为空哦~');
         //   return;
         // }
@@ -239,24 +244,24 @@
         //   whole.showTop('工厂不能为空哦~');
         //   return;
         // }
-        // if (_that.info.zlrequest === '') {
+        // if (_that.info.qualityreq === '') {
         //   whole.showTop('质量要求不能为空哦~');
         //   return;
         // }
-        // if (_that.info.jsrequest === '') {
+        // if (_that.info.techreq === '') {
         //   whole.showTop('技术工艺要求不能为空哦~');
         //   return;
         // }
         _that.getmateriallist.forEach(function (item) {
           if (item.id === _that.idf) {
-            item.wllb = _that.info.wllb
-            item.wl = _that.info.wl
-            item.num = _that.info.num
+            item.category = _that.info.category
+            item.material = _that.info.material
+            item.zmeng = _that.info.zmeng
             item.price = _that.info.price
-            item.coin = _that.info.coin
+            item.waerk = _that.info.waerk
             item.cash = _that.info.cash
-            item.zlrequest = _that.info.zlrequest
-            item.jsrequest = _that.info.jsrequest
+            item.qualityreq = _that.info.qualityreq
+            item.techreq = _that.info.techreq
           }
         })
         this.$store.dispatch('savemateriallist', _that.getmateriallist)
@@ -275,8 +280,8 @@
         let _that = this
         if (_that.getmateriallist.length > 0) {
           _that.getmateriallist.forEach(function (item) {
-            if (item.coin !== '') {
-              _that.info.coin = item.coin
+            if (item.waerk !== '') {
+              _that.info.waerk = item.waerk
               _that.hbflag = true;
             }
           })
@@ -305,6 +310,20 @@
     color: #E59313;
     border-color: #E59313;
   }
-
+  .sousuo_in {
+    background-color: #f4f4f4;
+    height: 17px
+  }
+  .sousuo_sp {
+    display: inline-flex;
+    align-items: center;
+    color: #333;
+  }
+  .sousuo_img {
+    padding-right:10px;
+    display:block;
+    width:14px;
+    height:14px
+  }
 </style>
 

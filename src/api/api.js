@@ -112,6 +112,18 @@ export default {
     })
   },
   /**
+   * 获取汇率值
+   * @param cb
+   */
+  getratevalue: function (saleArea, name1, cb) {
+    axios.get('/api/sopheader//sop/apply/sopheader/exchangeRate')
+      .then((res) => {
+        cb(res);
+      }).catch((error) => {
+      return Promise.reject(error)
+    })
+  },
+  /**
    * 保存
    * @param cb
    */

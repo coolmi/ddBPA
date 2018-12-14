@@ -1,18 +1,28 @@
 <template>
   <div>
     <group title="需求抬头" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <cell title="需求编号" v-model="info.demandnum" value-align="left"></cell>
-      <cell title="业务员" v-model="info.name" value-align="left"></cell>
-      <cell title="销售部门" v-model="info.dept" value-align="left"></cell>
-      <datetime title="创建时间" v-model="info.createtime" format="YYYY-MM-DD"></datetime>
-      <selector title="业务类别" placeholder="请选择" v-model="info.ywtype" :options="ywlist"></selector>
-      <selector title="需求类型" placeholder="请选择" v-model="info.xqtype" :options="xqlist"></selector>
-      <x-input type="text"  title="搜索" placeholder="请输入销售范围关键词" text-align="center" v-model="sealfan"/>
-      <selector title="销售范围" placeholder="销售范围数据生成中..." v-model="info.sealfan" :options="xslist"></selector>
-      <x-input type="text" title="搜索" placeholder="请输入客户关键词" text-align="center" v-model="kehu"/>
-      <selector title="客户名称" placeholder="客户数据生成中..." v-model="info.customname" :options="customerlist"></selector>
-      <selector title="货币" placeholder="请选择" v-model="info.coin" :options="huobiList" :readonly="hbflag"></selector>
-      <x-input title="汇率" v-model="info.rate" text-align="center"></x-input>
+      <cell title="需求编号" v-model="info.doc" value-align="left"></cell>
+      <cell title="业务员" v-model="info.salesmanName" value-align="left"></cell>
+      <cell title="销售部门" v-model="info.department" value-align="left"></cell>
+      <datetime title="创建时间" v-model="info.credat" format="YYYY-MM-DD"></datetime>
+      <selector title="业务类别" placeholder="请选择" v-model="info.buscat" :options="ywlist"></selector>
+      <selector title="需求类型" placeholder="请选择" v-model="info.doctype" :options="xqlist"></selector>
+      <x-input type="text" placeholder="请输入销售范围关键词" text-align="center" v-model="sealfan" class="sousuo_in">
+        <span slot="label" class="sousuo_sp">
+          <img class="sousuo_img" src="/static/img/search.png">
+          搜索
+        </span>
+      </x-input>
+      <selector title="销售范围" placeholder="销售范围数据生成中..." v-model="info.saleArea" :options="xslist"></selector>
+      <x-input type="text" placeholder="请输入客户关键词" text-align="center" v-model="kehu" class="sousuo_in">
+        <span slot="label" class="sousuo_sp">
+          <img class="sousuo_img" src="/static/img/search.png">
+          搜索
+        </span>
+      </x-input>
+      <selector title="客户名称" placeholder="客户数据生成中..." v-model="info.kunnrName" :options="customerlist"></selector>
+      <selector title="货币" placeholder="请选择" v-model="info.waerk" :options="huobiList" :readonly="hbflag"></selector>
+      <x-input title="汇率" v-model="info.wkurs" text-align="center"></x-input>
     </group>
     <box gap="10px 50px">
       <flexbox>
@@ -44,16 +54,16 @@
     data() {
       return {
         info: {
-          name: '',
-          dept: '',
-          demandnum: '',
-          createtime: '',
-          ywtype: '',
-          xqtype: '',
-          sealfan: '',
-          customname: '',
-          coin: '',
-          rate: ''
+          salesmanName: '',
+          department: '',
+          doc: '',
+          credat: '',
+          buscat: '',
+          doctype: '',
+          saleArea: '',
+          kunnrName: '',
+          waerk: '',
+          wkurs: ''
         },
         sealfan: '',
         kehu: '',
@@ -68,9 +78,6 @@
     watch: {
       kehu: function (val) {
         this.getkhInfo()
-      },
-      sealfan: function (val) {
-        this.getxfInfo()
       }
     },
     computed: {
@@ -101,8 +108,8 @@
           if (res) {
             console.log(res);
             // 用户信息
-            _that.info.name = res.data.headVo.salesmanName
-            _that.info.dept = res.data.headVo.departmentName
+            _that.info.salesmanName = res.data.headVo.salesmanName
+            _that.info.department = res.data.headVo.departmentName
             // 业务类别
             res.data.bustypeList.forEach(function (item) {
               let ywobj = {
@@ -157,33 +164,25 @@
           }
         })
       },
-      // 获取销售范围模糊查询数据
-      // getxfInfo () {
-      //   let _that = this
-      //   _that.xslist = _that.xslist.filter(function (item) {
-      //     item.indexOf(_that.sealfan) !== -1
-      //   })
-      //   return _that.xslist
-      // },
       // 货币一致
       getsamename () {
         let _that = this
         if (_that.getmateriallist.length > 0) {
           _that.getmateriallist.forEach(function (item) {
-            if (item.coin !== '') {
-              _that.info.coin = item.coin
-              let name = _that.getcashname(_that.info.coin)
+            if (item.waerk !== '') {
+              _that.info.waerk = item.waerk
+              let name = _that.getcashname(_that.info.waerk)
               if (name === '人民币') {
-                _that.info.rate = '1'
+                _that.info.wkurs = '1'
               }
               if (name === '美元') {
-                _that.info.rate = '6.85'
+                _that.info.wkurs = '6.85'
               }
               if (name === '日元') {
-                _that.info.rate = '4.9571'
+                _that.info.wkurs = '4.9571'
               }
               if (name === '欧元') {
-                _that.info.rate = '6.7189'
+                _that.info.wkurs = '6.7189'
               }
               _that.hbflag = true;
             }
@@ -226,5 +225,19 @@
     color: #E59313;
     border-color: #E59313;
   }
-
+  .sousuo_in {
+    background-color: #f4f4f4;
+    height: 17px
+  }
+  .sousuo_sp {
+    display: inline-flex;
+    align-items: center;
+    color: #333;
+  }
+  .sousuo_img {
+    padding-right:10px;
+    display:block;
+    width:14px;
+    height:14px
+  }
 </style>
