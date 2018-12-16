@@ -37,16 +37,6 @@ const router = new Router({
       meta: {title: '交货计划明细'}
     },
     {
-      path: '/bomList',
-      component: require('@/views/BOMList'),
-      meta: {title: 'BOM'}
-    },
-    {
-      path: '/bom',
-      component: require('@/views/BOM'),
-      meta: {title: 'BOM明细'}
-    },
-    {
       path: '/materialHeader',
       component: require('@/views/materialHeader'),
       meta: {title: '物料需求抬头'}
