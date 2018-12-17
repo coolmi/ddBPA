@@ -27,8 +27,8 @@ const router = new Router({
       meta: {title: '物料需求列表'}
     },
     {
-      path: '/deliveryPlanList',
-      component: require('@/views/deliveryPlanList'),
+      path: '/deliveryList',
+      component: require('@/views/deliveryList'),
       meta: {title: '交货计划'}
     },
     {

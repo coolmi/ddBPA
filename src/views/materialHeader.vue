@@ -210,10 +210,21 @@
       // 保存
       saveinfo () {
         let _that = this
+        let itemlist = []
+        let delilist = []
+        _that.getmateriallist.forEach(function (item) {
+          _that.getplantlist.forEach(function (items) {
+            if (item.id === items.wlid) {
+              delilist.push(items)
+            }
+          })
+          item.deliverylist = delilist
+          itemlist.push(item)
+        })
+        alert(JSON.stringify(itemlist));
         let params = {
           info: this.info,
-          marterialInfo: _that.getmateriallist,
-          plantlist: _that.getplantlist
+          itemlist: itemlist
         }
         if (_that.getplantlist.length === 0) {
           whole.showTop('计划明细不能为空哦~')
@@ -221,6 +232,7 @@
         }
         api.savematerial(params, function (res) {
           console.log('看接口')
+          alert(JSON.stringify(res))
           console.log(res);
         })
       }

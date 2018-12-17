@@ -68,7 +68,7 @@
       // 保存
       oneevent() {
         this.$store.dispatch('addplantlist', this.obj)
-        router.push({path: '/deliveryPlanList'})
+        router.push({path: '/deliveryList'})
       },
       // 修改保存
       twoevent() {
@@ -83,7 +83,7 @@
           }
         })
         this.$store.dispatch('saveplantlist', _that.getlist)
-        router.push({path: '/deliveryPlanList'})
+        router.push({path: '/deliveryList'})
       },
       // 获取当前时间
       getlocalTime () {

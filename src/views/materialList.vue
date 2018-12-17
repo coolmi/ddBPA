@@ -80,7 +80,7 @@
       // 交货计划页跳转
       jhevent(id) {
         this.$store.dispatch('addmaterialid', id)
-        router.push({path: '/deliveryPlanList'})
+        router.push({path: '/deliveryList'})
       },
       // 删除方法(找索引)
       shan (p) {
@@ -98,7 +98,6 @@
         if (index > -1) {
           this.getlist.splice(index, 1)
         }
-        // this.$store.dispatch('savemateriallist', this.getlist)
       },
       // 新增物料
       xzevent() {
