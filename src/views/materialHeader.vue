@@ -20,9 +20,9 @@
           搜索
         </span>
       </x-input>
-      <selector title="客户名称" placeholder="客户数据生成中..." v-model="info.kunnrName" :options="customerlist"></selector>
+      <selector title="客户名称" placeholder="客户数据生成中..." v-model="info.kunnrName" :options="customerlist" @on-change="gethbhlname"></selector>
       <selector title="货币" placeholder="请选择" v-model="info.waerk" :options="huobiList" :readonly="hbflag"></selector>
-      <x-input title="汇率" v-model="info.wkurs" text-align="center"></x-input>
+      <x-input title="汇率" v-model="info.wkurs" text-align="left"></x-input>
     </group>
     <box gap="10px 50px">
       <flexbox>
@@ -67,7 +67,7 @@
         },
         sealfan: '',
         kehu: '',
-        hbflag: 'false',
+        hbflag: false,
         ywlist: [], // 业务类别
         xqlist: [], // 需求类型
         xsfanlist: [], // 销售范围
@@ -82,7 +82,8 @@
     },
     computed: {
       ...mapGetters({
-        getmateriallist: 'getmateriallist'
+        getmateriallist: 'getmateriallist',
+        getplantlist: 'getplantlist'
       }),
       xslist: function() {
         let search = this.sealfan;
@@ -98,7 +99,7 @@
     },
     created() {
       this.getlistInfo();
-      this.getsamename();
+      this.getlocalTime();
     },
     methods: {
       // 获取下拉数据
@@ -165,26 +166,23 @@
         })
       },
       // 货币一致
-      getsamename () {
+      gethbhlname () {
         let _that = this
         if (_that.getmateriallist.length > 0) {
           _that.getmateriallist.forEach(function (item) {
             if (item.waerk !== '') {
               _that.info.waerk = item.waerk
-              let name = _that.getcashname(_that.info.waerk)
-              if (name === '人民币') {
-                _that.info.wkurs = '1'
-              }
-              if (name === '美元') {
-                _that.info.wkurs = '6.85'
-              }
-              if (name === '日元') {
-                _that.info.wkurs = '4.9571'
-              }
-              if (name === '欧元') {
-                _that.info.wkurs = '6.7189'
-              }
               _that.hbflag = true;
+              api.getratevalue(_that.info.credat, _that.info.saleArea, _that.info.kunnrName, _that.info.waerk, function (res) {
+                console.log('汇率啊数据')
+                console.log(res)
+                if (res) {
+                  res.data.list.forEach(function (item) {
+                    console.log(item)
+                    _that.info.wkurs = item.UKURS
+                  })
+                }
+              })
             }
           })
         } else {
@@ -199,14 +197,27 @@
           }
         }
       },
+      // 获取当前时间
+      getlocalTime () {
+        let time = new Date()
+        this.info.credat = time.toLocaleDateString().replace(/\//g, '-')
+        console.log(this.info.credat)
+      },
       // 返回
       fhinfo () {
         router.go(-1)
       },
       // 保存
       saveinfo () {
+        let _that = this
         let params = {
-          info: this.info
+          info: this.info,
+          marterialInfo: _that.getmateriallist,
+          plantlist: _that.getplantlist
+        }
+        if (_that.getplantlist.length === 0) {
+          whole.showTop('计划明细不能为空哦~')
+          return;
         }
         api.savematerial(params, function (res) {
           console.log('看接口')

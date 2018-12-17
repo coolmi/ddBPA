@@ -9,7 +9,7 @@
     </group>
     <flexbox class="footerButton" style="z-index: 2;">
       <flexbox-item v-if="flag === '0'" @click.native="oneevent" style="color:#FF8519;">保存</flexbox-item>
-      <flexbox-item v-if="flag === '1'" @click.native="twoevent" style="color:#FF8519;">保存</flexbox-item>
+      <flexbox-item v-if="flag === '1'" @click.native="twoevent" style="color:#FF8519;">保存44444444</flexbox-item>
     </flexbox>
   </div>
 </template>
@@ -56,7 +56,7 @@
       }
     },
     created() {
-      this.obj.wlid = this.getwlid; // 物料id赋给交货计划对象中
+      this.getlocalTime();
       let pl = JSON.parse(this.$route.query.pl);
       if (pl !== null) {
         this.obj = pl
@@ -84,6 +84,13 @@
         })
         this.$store.dispatch('saveplantlist', _that.getlist)
         router.push({path: '/deliveryPlanList'})
+      },
+      // 获取当前时间
+      getlocalTime () {
+        let time = new Date()
+        this.obj.wlid = this.getwlid; // 物料id赋给交货计划对象中
+        this.obj.etdat = time.toLocaleDateString().replace(/\//g, '-')
+        console.log(this.obj.etdat)
       },
       // 标识name
       getbsname(code) {

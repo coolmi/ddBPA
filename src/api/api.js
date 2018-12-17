@@ -115,8 +115,8 @@ export default {
    * 获取汇率值
    * @param cb
    */
-  getratevalue: function (saleArea, name1, cb) {
-    axios.get('/api/sopheader//sop/apply/sopheader/exchangeRate')
+  getratevalue: function (credat, saleArea, kunnrName, waerk, cb) {
+    axios.get('/api/sopheader/exchangeRate?credat=' + credat + '&saleArea=' + saleArea + '&kunnrName=' + kunnrName + '&waerk=' + waerk)
       .then((res) => {
         cb(res);
       }).catch((error) => {
@@ -128,7 +128,7 @@ export default {
    * @param cb
    */
   savematerial: function (params, cb) {
-    axios.post('/api/sopheader/sop/apply/sopheader/saveJson', params)
+    axios.post('/api/sopheader/saveJson', params)
       .then((res) => {
         cb(res);
       }).catch((error) => {

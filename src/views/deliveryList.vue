@@ -2,7 +2,7 @@
   <div>
     <group title="计划列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
       <card class="card" v-if="listDate.length > 0" v-for="(pl, index) in listDate" :key="index">
-        <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.jhrq}}</div>
+        <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.etdat}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
             <span>{{pl.wmeng}}</span>
@@ -10,7 +10,7 @@
             <span class="content_color">数量</span>
           </div>
           <div class="vux-1px-r">
-            <span>{{pl.prgrs}}</span>
+            <span>{{pl.bsname}}</span>
             <br/>
             <span class="content_color">期间标识</span>
           </div>
