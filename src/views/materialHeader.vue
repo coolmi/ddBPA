@@ -54,16 +54,18 @@
     data() {
       return {
         info: {
+          id: '',
+          doc: '',
           salesmanName: '',
           department: '',
-          doc: '',
           credat: '',
           buscat: '',
           doctype: '',
           saleArea: '',
           kunnrName: '',
           waerk: '',
-          wkurs: ''
+          wkurs: '',
+          status: ''
         },
         sealfan: '',
         kehu: '',
@@ -210,11 +212,18 @@
       // 保存
       saveinfo () {
         let _that = this
+        if (_that.getplantlist.length === 0) {
+          whole.showTop('计划明细不能为空哦~')
+          return;
+        }
         let itemlist = []
         let delilist = []
         _that.getmateriallist.forEach(function (item) {
           _that.getplantlist.forEach(function (items) {
             if (item.id === items.wlid) {
+              item.id = ''
+              items.wlid = ''
+              items.id = ''
               delilist.push(items)
             }
           })
@@ -223,12 +232,19 @@
         })
         alert(JSON.stringify(itemlist));
         let params = {
-          info: this.info,
+          id: _that.info.id,
+          doc: _that.info.doc,
+          salesmanName: _that.info.salesmanName,
+          department: _that.info.department,
+          credat: _that.info.credat,
+          buscat: _that.info.buscat,
+          doctype: _that.info.doctype,
+          saleArea: _that.info.saleArea,
+          kunnrName: _that.info.kunnrName,
+          waerk: _that.info.waerk,
+          wkurs: _that.info.wkurs,
+          status: _that.info.status,
           itemlist: itemlist
-        }
-        if (_that.getplantlist.length === 0) {
-          whole.showTop('计划明细不能为空哦~')
-          return;
         }
         api.savematerial(params, function (res) {
           console.log('看接口')

@@ -1,7 +1,7 @@
 <template>
   <div>
     <group title="交货计划明细" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <selector title="期间标识" v-model="obj.prgrs" :options="list1" @on-change="getbsname"></selector>
+      <selector title="期间标识" placeholder="请选择" v-model="obj.prgrs" :options="list1" @on-change="getbsname"></selector>
       <datetime title="交货日期" v-model="obj.etdat" placeholder="请输入交货日期" format="YYYY-MM-DD"></datetime>
       <x-input title="数量" v-model="obj.wmeng"></x-input>
       <cell title="单位" v-model="obj.vrkme" value-align="left"></cell>
@@ -9,7 +9,7 @@
     </group>
     <flexbox class="footerButton" style="z-index: 2;">
       <flexbox-item v-if="flag === '0'" @click.native="oneevent" style="color:#FF8519;">保存</flexbox-item>
-      <flexbox-item v-if="flag === '1'" @click.native="twoevent" style="color:#FF8519;">保存44444444</flexbox-item>
+      <flexbox-item v-if="flag === '1'" @click.native="twoevent" style="color:#FF8519;">保存</flexbox-item>
     </flexbox>
   </div>
 </template>
@@ -33,7 +33,7 @@
         obj: {
           wlid: '',
           id: '',
-          prgrs: '01',
+          prgrs: '',
           bsname: '',
           etdat: '',
           wmeng: '',
