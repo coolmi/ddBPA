@@ -280,9 +280,9 @@
           console.log(res);
           if (res.data.code) {
             whole.showTop('保存成功了呦~')
-            _that.$store.dispatch('clearmateriallist')
-            _that.$store.dispatch('clearplantlist')
-            router.push({path: '/'})
+            // _that.$store.dispatch('clearmateriallist')
+            // _that.$store.dispatch('clearplantlist')
+            // router.push({path: '/'})
           } else {
             whole.showTop('保存失败,请重试吧~')
           }

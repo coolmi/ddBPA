@@ -108,21 +108,32 @@
       // 下一步
       nextevent() {
         let _that = this
-        console.log(_that.getlist);
-        _that.getlist.forEach(function (item) {
-          if (_that.getplantlist.length > 0) {
-            _that.getplantlist.forEach(function (items) {
-              if (item.id !== items.wlid) {
-                whole.showTop('计划明细不能为空哦~')
-                return;
-              }
-              router.push({path: '/materialHeader'})
-            })
-          } else {
-            whole.showTop('计划明细不能为空哦~')
-            return;
-          }
-        })
+        // let malen = _that.getlist.length
+        // if (_that.getplantlist.length > 0) {
+        //   let i = 1
+        //   for (let p = 0; p < _that.getplantlist.length; p++) {
+        //     for (let j = 1; j < _that.getplantlist.length; j++) {
+        //       if (_that.getplantlist[p].wlid !== _that.getplantlist[j].wlid) {
+        //         i++
+        //       }
+        //     }
+        //   }
+        //   if (malen !== i) {
+        //     whole.showTop('计划明细不能为空哦~')
+        //     return;
+        //   } else {
+        //     router.push({path: '/materialHeader'})
+        //   }
+        // } else {
+        //   whole.showTop('计划明细不能为空哦~')
+        //   return;
+        // }
+        if (_that.getplantlist.length > 0) {
+            router.push({path: '/materialHeader'})
+        } else {
+          whole.showTop('计划明细不能为空哦~')
+          return;
+        }
       }
     }
   }
