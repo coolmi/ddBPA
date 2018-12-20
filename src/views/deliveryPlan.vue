@@ -26,9 +26,9 @@
     data() {
       return {
         list1: [
-          {key: '01', value: '日'},
-          {key: '02', value: '周'},
-          {key: '03', value: '月'}
+          {key: 'D', value: '日'},
+          {key: 'W', value: '周'},
+          {key: 'M', value: '月'}
         ],
         obj: {
           wlid: '',
@@ -57,14 +57,18 @@
     },
     created() {
       this.getlocalTime();
-      let pl = JSON.parse(this.$route.query.pl);
-      if (pl !== null) {
-        this.obj = pl
-        this.idf = pl.id // 通过交货计划对象id修改
-        this.flag = '1'
-      }
+      this.getdata();
     },
     methods: {
+      // 修改传递的对象
+      getdata () {
+        let pl = JSON.parse(this.$route.query.pl);
+        if (pl !== null) {
+          this.obj = pl
+          this.idf = pl.id // 通过交货计划对象id修改
+          this.flag = '1'
+        }
+      },
       // 保存
       oneevent() {
         this.$store.dispatch('addplantlist', this.obj)

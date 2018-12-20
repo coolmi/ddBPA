@@ -212,25 +212,54 @@
       // 保存
       saveinfo () {
         let _that = this
-        if (_that.getplantlist.length === 0) {
-          whole.showTop('计划明细不能为空哦~')
+        if (_that.info.salesmanName === '') {
+          whole.showTop('读取业务员姓名失败...请联系管理员!')
+          return;
+        }
+        if (_that.info.department === '') {
+          whole.showTop('读取销售部门失败...请联系管理员!')
+          return;
+        }
+        if (_that.info.buscat === '') {
+          whole.showTop('业务类别不能为空哦~')
+          return;
+        }
+        if (_that.info.doctype === '') {
+          whole.showTop('需求类型不能为空哦~')
+          return;
+        }
+        if (_that.info.saleArea === '') {
+          whole.showTop('销售范围不能为空哦~')
+          return;
+        }
+        if (_that.info.kunnrName === '') {
+          whole.showTop('客户姓名不能为空哦~')
+          return;
+        }
+        if (_that.info.waerk === '') {
+          whole.showTop('货币不能为空哦~')
+          return;
+        }
+        if (_that.info.wkurs === '') {
+          whole.showTop('汇率不能为空哦~')
           return;
         }
         let itemlist = []
         let delilist = []
+        let itemnum = 1
         _that.getmateriallist.forEach(function (item) {
           _that.getplantlist.forEach(function (items) {
             if (item.id === items.wlid) {
-              item.id = ''
               items.wlid = ''
               items.id = ''
               delilist.push(items)
             }
           })
-          item.deliverylist = delilist
+          item.id = ''
+          item.itemno = itemnum++
+          item.deliveryList = delilist
           itemlist.push(item)
         })
-        alert(JSON.stringify(itemlist));
         let params = {
           id: _that.info.id,
           doc: _that.info.doc,
@@ -243,13 +272,99 @@
           kunnrName: _that.info.kunnrName,
           waerk: _that.info.waerk,
           wkurs: _that.info.wkurs,
-          status: _that.info.status,
-          itemlist: itemlist
+          status: '1',
+          itemList: itemlist
         }
+        console.log(params)
         api.savematerial(params, function (res) {
-          console.log('看接口')
-          alert(JSON.stringify(res))
           console.log(res);
+          if (res.data.code) {
+            whole.showTop('保存成功了呦~')
+            _that.$store.dispatch('clearmateriallist')
+            _that.$store.dispatch('clearplantlist')
+            router.push({path: '/'})
+          } else {
+            whole.showTop('保存失败,请重试吧~')
+          }
+        })
+      },
+      // 提交
+      tjinfo () {
+        let _that = this
+        if (_that.info.salesmanName === '') {
+          whole.showTop('读取业务员姓名失败...请联系管理员!')
+          return;
+        }
+        if (_that.info.department === '') {
+          whole.showTop('读取销售部门失败...请联系管理员!')
+          return;
+        }
+        if (_that.info.buscat === '') {
+          whole.showTop('业务类别不能为空哦~')
+          return;
+        }
+        if (_that.info.doctype === '') {
+          whole.showTop('需求类型不能为空哦~')
+          return;
+        }
+        if (_that.info.saleArea === '') {
+          whole.showTop('销售范围不能为空哦~')
+          return;
+        }
+        if (_that.info.kunnrName === '') {
+          whole.showTop('客户姓名不能为空哦~')
+          return;
+        }
+        if (_that.info.waerk === '') {
+          whole.showTop('货币不能为空哦~')
+          return;
+        }
+        if (_that.info.wkurs === '') {
+          whole.showTop('汇率不能为空哦~')
+          return;
+        }
+        let itemlist = []
+        let delilist = []
+        let itemnum = 1
+        _that.getmateriallist.forEach(function (item) {
+          _that.getplantlist.forEach(function (items) {
+            if (item.id === items.wlid) {
+              items.wlid = ''
+              items.id = ''
+              delilist.push(items)
+            }
+          })
+          item.id = ''
+          item.itemno = itemnum++
+          item.deliveryList = delilist
+          itemlist.push(item)
+        })
+        let params = {
+          id: _that.info.id,
+          doc: _that.info.doc,
+          salesmanName: _that.info.salesmanName,
+          department: _that.info.department,
+          credat: _that.info.credat,
+          buscat: _that.info.buscat,
+          doctype: _that.info.doctype,
+          saleArea: _that.info.saleArea,
+          kunnrName: _that.info.kunnrName,
+          waerk: _that.info.waerk,
+          wkurs: _that.info.wkurs,
+          status: '2',
+          itemList: itemlist
+        }
+        console.log(params)
+        api.savematerial(params, function (res) {
+          console.log(res);
+          if (res.data.code) {
+            whole.showTop('提交成功了呦~')
+            _that.$store.dispatch('clearmateriallist')
+            _that.$store.dispatch('clearplantlist')
+            router.push({path: '/'})
+          } else {
+            whole.showTop('保存失败,请重试吧~')
+          }
         })
       }
     }

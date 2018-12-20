@@ -50,9 +50,8 @@
     Flexbox,
     FlexboxItem
   } from 'vux'
-  // import whole from '@/lib/whole';
+  import whole from '@/lib/whole';
   import {mapGetters} from 'vuex'
-  // import axios from 'axios';
   import router from '../router';
 
   export default {
@@ -66,11 +65,13 @@
     },
     computed: {
       ...mapGetters({
-        getlist: 'getmateriallist'
+        getlist: 'getmateriallist',
+        getplantlist: 'getplantlist'
       })
     },
     created() {
       // alert(JSON.stringify(this.getlist))
+      console.log(this.getplantlist);
     },
     methods: {
       // 单个物料详情跳转
@@ -105,7 +106,22 @@
       },
       // 下一步
       nextevent() {
-        router.push({path: '/materialHeader'})
+        let _that = this
+        console.log(_that.getlist);
+        _that.getlist.forEach(function (item) {
+          if (_that.getplantlist.length > 0) {
+            _that.getplantlist.forEach(function (items) {
+              if (item.id !== items.wlid) {
+                whole.showTop('计划明细不能为空哦~')
+                return;
+              }
+              router.push({path: '/materialHeader'})
+            })
+          } else {
+            whole.showTop('计划明细不能为空哦~')
+            return;
+          }
+        })
       }
     }
   }

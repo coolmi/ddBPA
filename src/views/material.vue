@@ -62,6 +62,7 @@
     data() {
       return {
         info: {
+          id: '',
           category: '',
           material: '',
           zmeng: '',
@@ -70,10 +71,7 @@
           waerk: '',
           cash: '', // 金额
           qualityreq: '',
-          techreq: '',
-          id: ''
-          // factory: '',
-          // plant: '',,
+          techreq: ''
         },
         wuliao: '', // 物料监听关键字,支持模糊查询
         idf: '', // id接收
@@ -83,7 +81,6 @@
         wllist: [], // 物料
         protypeList: [], // 物料类别
         huobiList: [] // 货币
-        // tplantList: [], // 工厂
       }
     },
     watch: {
@@ -141,14 +138,6 @@
               }
               _that.huobiList.push(hbobj)
             })
-            // 工厂
-            // res.data.tplantList.forEach(function (item) {
-            //   let tplantobj = {
-            //     key: item.PLANT,
-            //     value: item.PLANT_DESC
-            //   }
-            //   _that.tplantList.push(tplantobj)
-            // })
           }
         })
       },
@@ -174,84 +163,72 @@
       // 列表页面下一步跳转
       one() {
         let _that = this
-        // if (_that.info.category === '') {
-        //   whole.showTop('物料类别不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.material === '') {
-        //   whole.showTop('物料不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.zmeng === '') {
-        //   whole.showTop('数量不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.price === '') {
-        //   whole.showTop('单价不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.waerk === '') {
-        //   whole.showTop('货币不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.qualityreq === '') {
-        //   whole.showTop('质量要求不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.techreq === '') {
-        //   whole.showTop('技术工艺要求不能为空哦~');
-        //   return;
-        // }
-        // if (_that.getmateriallist.length > 0) {
-        //   _that.getmateriallist.forEach(function (item) {
-        //     if (item.waerk !== '') {
-        //       if (_that.info.waerk !== item.waerk) {
-        //         let name = _that.gethbname(item.waerk)
-        //         whole.showTop('货币要保持一致!请选择' + name + '!')
-        //         return;
-        //       } else {
-        //       }
-        //     }
-        //   })
-        // }
+        if (_that.info.category === '') {
+          whole.showTop('物料类别不能为空哦~');
+          return;
+        }
+        if (_that.info.material === '') {
+          whole.showTop('物料不能为空哦~');
+          return;
+        }
+        if (_that.info.zmeng === '') {
+          whole.showTop('数量不能为空哦~');
+          return;
+        }
+        if (_that.info.price === '') {
+          whole.showTop('单价不能为空哦~');
+          return;
+        }
+        if (_that.info.waerk === '') {
+          whole.showTop('货币不能为空哦~');
+          return;
+        }
+        if (_that.info.qualityreq === '') {
+          whole.showTop('质量要求不能为空哦~');
+          return;
+        }
+        if (_that.info.techreq === '') {
+          whole.showTop('技术工艺要求不能为空哦~');
+          return;
+        }
         _that.$store.dispatch('addmateriallist', _that.info)
         router.push({path: '/materialList'})
       },
       // 物料详情页面修改保存跳转
       two() {
         let _that = this;
-        // if (_that.info.category === '') {
-        //   whole.showTop('物料类别不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.material === '') {
-        //   whole.showTop('物料不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.zmeng === '') {
-        //   whole.showTop('数量不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.price === '') {
-        //   whole.showTop('单价不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.waerk === '') {
-        //   whole.showTop('货币不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.factory === '') {
-        //   whole.showTop('工厂不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.qualityreq === '') {
-        //   whole.showTop('质量要求不能为空哦~');
-        //   return;
-        // }
-        // if (_that.info.techreq === '') {
-        //   whole.showTop('技术工艺要求不能为空哦~');
-        //   return;
-        // }
+        if (_that.info.category === '') {
+          whole.showTop('物料类别不能为空哦~');
+          return;
+        }
+        if (_that.info.material === '') {
+          whole.showTop('物料不能为空哦~');
+          return;
+        }
+        if (_that.info.zmeng === '') {
+          whole.showTop('数量不能为空哦~');
+          return;
+        }
+        if (_that.info.price === '') {
+          whole.showTop('单价不能为空哦~');
+          return;
+        }
+        if (_that.info.waerk === '') {
+          whole.showTop('货币不能为空哦~');
+          return;
+        }
+        if (_that.info.factory === '') {
+          whole.showTop('工厂不能为空哦~');
+          return;
+        }
+        if (_that.info.qualityreq === '') {
+          whole.showTop('质量要求不能为空哦~');
+          return;
+        }
+        if (_that.info.techreq === '') {
+          whole.showTop('技术工艺要求不能为空哦~');
+          return;
+        }
         _that.getmateriallist.forEach(function (item) {
           if (item.id === _that.idf) {
             item.category = _that.info.category
@@ -287,14 +264,6 @@
           })
         } else {
           _that.hbflag = false;
-        }
-      },
-      // 工厂name
-      getgcname(code) {
-        for (let o of this.tplantList) {
-          if (code === o.key) {
-            this.info.plant = o.value
-          }
         }
       }
     }
