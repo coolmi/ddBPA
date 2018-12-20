@@ -62,7 +62,6 @@
     data() {
       return {
         info: {
-          id: '',
           category: '',
           material: '',
           zmeng: '',
@@ -71,7 +70,10 @@
           waerk: '',
           cash: '', // 金额
           qualityreq: '',
-          techreq: ''
+          techreq: '',
+          id: ''
+          // factory: '',
+          // plant: '',,
         },
         wuliao: '', // 物料监听关键字,支持模糊查询
         idf: '', // id接收
@@ -81,6 +83,7 @@
         wllist: [], // 物料
         protypeList: [], // 物料类别
         huobiList: [] // 货币
+        // tplantList: [], // 工厂
       }
     },
     watch: {

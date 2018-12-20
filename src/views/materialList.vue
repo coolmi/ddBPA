@@ -98,6 +98,7 @@
         let index = this.shan(p)
         if (index > -1) {
           this.getlist.splice(index, 1)
+          this.$store.dispatch('savemateriallist', this.getlist)
         }
       },
       // 新增物料
