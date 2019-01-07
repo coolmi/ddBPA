@@ -17,14 +17,14 @@ const router = new Router({
       path: '/',
       component: require('@/views/material'),
       meta: {
-        title: '物料提报申请',
+        title: '客户询单提报',
         ddConfig: true
       }
     },
     {
       path: '/materialList',
       component: require('@/views/materialList'),
-      meta: {title: '物料需求列表'}
+      meta: {title: '询单明细列表'}
     },
     {
       path: '/deliveryList',
@@ -39,7 +39,7 @@ const router = new Router({
     {
       path: '/materialHeader',
       component: require('@/views/materialHeader'),
-      meta: {title: '物料需求抬头'}
+      meta: {title: '客户询单抬头'}
     },
     {
       path: '*',

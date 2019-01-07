@@ -12,9 +12,8 @@
       <x-input title="数量" v-model="info.zmeng" text-align="left"></x-input>
       <cell title="单位" v-model="info.meins" value-align="left"></cell>
       <x-input title="单价" v-model="info.price" text-align="left"></x-input>
-      <selector title="货币" placeholder="请选择" direction="ltr" v-model="info.waerk" :options="huobiList" :readonly="hbflag"></selector>
+      <!--<selector title="货币" placeholder="请选择" direction="ltr" v-model="info.waerk" :options="huobiList" :readonly="hbflag"></selector>-->
       <cell title="金额" v-model="amount" value-align="left"></cell>
-      <!--<selector title="工厂" placeholder="请选择" :options="tplantList" v-model="info.factory" @on-change="getgcname"></selector>-->
       <x-textarea title="质量要求" placeholder="请填写详细信息" :rows="2" v-model="info.qualityreq"></x-textarea>
       <x-textarea title="技术工艺要求" placeholder="请填写详细信息" :rows="2" v-model="info.techreq"></x-textarea>
       <cell v-show="idflag" v-model="ids"></cell>
@@ -72,18 +71,13 @@
           qualityreq: '',
           techreq: '',
           id: ''
-          // factory: '',
-          // plant: '',,
         },
         wuliao: '', // 物料监听关键字,支持模糊查询
         idf: '', // id接收
         idflag: false, // id状态标识
         flag: '0',
-        hbflag: false,
         wllist: [], // 物料
-        protypeList: [], // 物料类别
-        huobiList: [] // 货币
-        // tplantList: [], // 工厂
+        protypeList: [] // 物料类别
       }
     },
     watch: {
@@ -109,7 +103,6 @@
     created() {
       let _that = this
       _that.getlistInfo();
-      _that.getsamename();
       // 接收列表单个对象详情数据
       let pl = JSON.parse(_that.$route.query.pl);
       if (pl !== null) {
@@ -132,14 +125,6 @@
                 value: item.VALUE
               }
               _that.protypeList.push(protypeobj)
-            })
-            // 货币
-            res.data.currencyList.forEach(function (item) {
-              let hbobj = {
-                key: item.LABEL,
-                value: item.VALUE
-              }
-              _that.huobiList.push(hbobj)
             })
           }
         })
@@ -182,18 +167,6 @@
           whole.showTop('单价不能为空哦~');
           return;
         }
-        if (_that.info.waerk === '') {
-          whole.showTop('货币不能为空哦~');
-          return;
-        }
-        if (_that.info.qualityreq === '') {
-          whole.showTop('质量要求不能为空哦~');
-          return;
-        }
-        if (_that.info.techreq === '') {
-          whole.showTop('技术工艺要求不能为空哦~');
-          return;
-        }
         _that.$store.dispatch('addmateriallist', _that.info)
         router.push({path: '/materialList'})
       },
@@ -216,29 +189,12 @@
           whole.showTop('单价不能为空哦~');
           return;
         }
-        if (_that.info.waerk === '') {
-          whole.showTop('货币不能为空哦~');
-          return;
-        }
-        if (_that.info.factory === '') {
-          whole.showTop('工厂不能为空哦~');
-          return;
-        }
-        if (_that.info.qualityreq === '') {
-          whole.showTop('质量要求不能为空哦~');
-          return;
-        }
-        if (_that.info.techreq === '') {
-          whole.showTop('技术工艺要求不能为空哦~');
-          return;
-        }
         _that.getmateriallist.forEach(function (item) {
           if (item.id === _that.idf) {
             item.category = _that.info.category
             item.material = _that.info.material
             item.zmeng = _that.info.zmeng
             item.price = _that.info.price
-            item.waerk = _that.info.waerk
             item.cash = _that.info.cash
             item.qualityreq = _that.info.qualityreq
             item.techreq = _that.info.techreq
@@ -246,28 +202,6 @@
         })
         this.$store.dispatch('savemateriallist', _that.getmateriallist)
         router.push({path: '/materialList'})
-      },
-      // 货币处理
-      gethbname (val) {
-        for (let h of this.huobiList) {
-          if (val === h.key) {
-            return h.value
-          }
-        }
-      },
-      // 货币一致
-      getsamename () {
-        let _that = this
-        if (_that.getmateriallist.length > 0) {
-          _that.getmateriallist.forEach(function (item) {
-            if (item.waerk !== '') {
-              _that.info.waerk = item.waerk
-              _that.hbflag = true;
-            }
-          })
-        } else {
-          _that.hbflag = false;
-        }
       }
     }
   }

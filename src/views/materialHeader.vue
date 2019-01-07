@@ -6,7 +6,7 @@
       <cell title="销售部门" v-model="info.department" value-align="left"></cell>
       <datetime title="创建时间" v-model="info.credat" format="YYYY-MM-DD"></datetime>
       <selector title="业务类别" placeholder="请选择" v-model="info.buscat" :options="ywlist"></selector>
-      <selector title="需求类型" placeholder="请选择" v-model="info.doctype" :options="xqlist"></selector>
+      <selector title="需求类型" v-model="info.doctype" :options="xqlist" readonly></selector>
       <x-input type="text" placeholder="请输入销售范围关键词" text-align="center" v-model="sealfan" class="sousuo_in">
         <span slot="label" class="sousuo_sp">
           <img class="sousuo_img" src="/static/img/search.png">
@@ -21,7 +21,7 @@
         </span>
       </x-input>
       <selector title="客户名称" placeholder="客户数据生成中..." v-model="info.kunnrName" :options="customerlist" @on-change="gethbhlname"></selector>
-      <selector title="货币" placeholder="请选择" v-model="info.waerk" :options="huobiList" :readonly="hbflag"></selector>
+      <selector title="货币" placeholder="请选择" v-model="info.waerk" :options="huobiList" @on-change="getHLname"></selector>
       <x-input title="汇率" v-model="info.wkurs" text-align="left"></x-input>
     </group>
     <box gap="10px 50px">
@@ -60,7 +60,7 @@
           department: '',
           credat: '',
           buscat: '',
-          doctype: '',
+          doctype: 'AN',
           saleArea: '',
           kunnrName: '',
           waerk: '',
@@ -167,37 +167,32 @@
           }
         })
       },
-      // 货币一致
+      // 拿到默认货币和汇率
       gethbhlname () {
         let _that = this
-        if (_that.getmateriallist.length > 0) {
-          _that.getmateriallist.forEach(function (item) {
-            if (item.waerk !== '') {
-              _that.info.waerk = item.waerk
-              _that.hbflag = true;
-              api.getratevalue(_that.info.credat, _that.info.saleArea, _that.info.kunnrName, _that.info.waerk, function (res) {
-                console.log('汇率啊数据')
-                console.log(res)
-                if (res) {
-                  res.data.list.forEach(function (item) {
-                    console.log(item)
-                    _that.info.wkurs = item.UKURS
-                  })
-                }
-              })
-            }
-          })
-        } else {
-          _that.hbflag = false;
-        }
-      },
-      // 货币处理
-      getcashname (val) {
-        for (let h of this.huobiList) {
-          if (val === h.key) {
-            return h.value
+        api.getratevalue(_that.info.credat, _that.info.saleArea, _that.info.kunnrName, 'CNY', function (res) {
+          console.log(res)
+          if (res) {
+            res.data.list.forEach(function (item) {
+              console.log(item)
+              _that.info.waerk = 'CNY'
+              _that.info.wkurs = item.UKURS
+            })
           }
-        }
+        })
+      },
+      // 获取汇率
+      getHLname () {
+        let _that = this
+        api.getratevalue(_that.info.credat, _that.info.saleArea, _that.info.kunnrName, _that.info.waerk, function (res) {
+          console.log(res)
+          if (res) {
+            res.data.list.forEach(function (item) {
+              console.log(item)
+              _that.info.wkurs = item.UKURS
+            })
+          }
+        })
       },
       // 获取当前时间
       getlocalTime () {
