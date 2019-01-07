@@ -1,7 +1,7 @@
 <template>
   <div>
-    <group title="计划列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
-      <card class="card" v-if="listDate.length > 0" v-for="(pl, index) in listDate" :key="index">
+    <group title="计划列表" v-if="listDate.length > 0" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
+      <card class="card"  v-for="(pl, index) in listDate" :key="index">
         <div class="card_header" slot="header" @click="mdevent(pl)">{{pl.etdat}}</div>
         <div slot="content" class="card_content" @click="mdevent(pl)">
           <div class="vux-1px-r">
@@ -19,9 +19,9 @@
           <x-button type="primary" mini plain class="card_footer_but" text="删除" @click.native="del(pl)"></x-button>
         </div>
       </card>
-      <div class="sznull" v-else>
-        <p >空空如也~请新增BOM</p>
-      </div>
+    </group>
+    <group v-else title="计划列表" labelWidth="6.5rem" gutter="0" labelMarginRight="1rem">
+        <p class="sznull">空空如也~请新增计划!</p>
     </group>
     <box gap="10px 80px">
       <flexbox>
