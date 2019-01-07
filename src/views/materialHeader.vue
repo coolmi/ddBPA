@@ -6,7 +6,7 @@
       <cell title="销售部门" v-model="info.department" value-align="left"></cell>
       <datetime title="创建时间" v-model="info.credat" format="YYYY-MM-DD"></datetime>
       <selector title="业务类别" placeholder="请选择" v-model="info.buscat" :options="ywlist"></selector>
-      <selector title="需求类型" v-model="info.doctype" :options="xqlist" readonly></selector>
+      <selector title="需求类型" v-model="info.doctype" :options="xqlist"></selector>
       <x-input type="text" placeholder="请输入销售范围关键词" text-align="center" v-model="sealfan" class="sousuo_in">
         <span slot="label" class="sousuo_sp">
           <img class="sousuo_img" src="/static/img/search.png">
@@ -60,7 +60,7 @@
           department: '',
           credat: '',
           buscat: '',
-          doctype: 'AN',
+          doctype: '',
           saleArea: '',
           kunnrName: '',
           waerk: '',
