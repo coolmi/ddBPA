@@ -159,20 +159,20 @@
       })
     },
     created() {
-      let _that = this;
+      this.getorg();
       this.setRight();
-      let dd = window.dd;
-      ding.jsApiOAuth(_that.path).then((ddconfig) => {
-        // alert(JSON.stringify(ddconfig))
-        dd.config(ddconfig);
-        _that.getOrgInfo();
-        // _that.getddUserID();
-        // _that.checkPerson();
-      }).catch(function (error) {
-        ding.alertInfo(DEM.ddConfigInfoError);
-      });
     },
     methods: {
+      getorg () {
+        let _that = this;
+        let dd = window.dd;
+        ding.jsApiOAuth(_that.path).then((ddconfig) => {
+          dd.config(ddconfig);
+          _that.getOrgInfo();
+        }).catch(function (error) {
+          ding.alertInfo(DEM.ddConfigInfoError);
+        });
+      },
       setRight() {
         let dd = window.dd
         let _that = this;
@@ -193,7 +193,7 @@
                       api.getDebugLogin(data, result.value, function (res) {
                         if (res.data.code) {
                           _that.showPage = 1;
-                          _that.getOrgInfo();
+                          _that.getorg();
                         } else {
                           _that.showPage = 2;
                           whole.showTop('登陆失败！请重试！')
@@ -231,7 +231,6 @@
       // 获取组织下人员
       getOrgUserInfo(orgobjid) {
         let _that = this;
-        alert(orgobjid)
         api.getOrgUserInfo(orgobjid, function (res) {
           // _that.username = res.data.data.leadername
           // _that.orgname = res.data.data.orginfos[0].orgname
@@ -279,8 +278,6 @@
             _that.orginfosName = _that.selectOrginfos[i].key;
             orgobjid = _that.selectOrginfos[i].value;
           }
-          console.log('kkk');
-          console.log(orgobjid);
           _that.getOrgUserInfo(orgobjid);
         })
       },

@@ -1,5 +1,5 @@
 const dingApiConfig = {
-  'device.geolocation.get': false,
+  'device.geolocation.get': true,
   'device.base.getUUID': false,
   'device.base.getInterface': false,
   'device.launcher.checkInstalledApps': false,
