@@ -160,6 +160,7 @@
     },
     created() {
       let _that = this;
+      this.setRight();
       let dd = window.dd;
       ding.jsApiOAuth(_that.path).then((ddconfig) => {
         // alert(JSON.stringify(ddconfig))
@@ -170,7 +171,6 @@
       }).catch(function (error) {
         ding.alertInfo(DEM.ddConfigInfoError);
       });
-      this.setRight();
     },
     methods: {
       setRight() {
@@ -193,8 +193,10 @@
                       api.getDebugLogin(data, result.value, function (res) {
                         if (res.data.code) {
                           _that.showPage = 1;
+                          _that.getOrgInfo();
                         } else {
                           _that.showPage = 2;
+                          whole.showTop('登陆失败！请重试！')
                         }
                       })
                     })
@@ -229,6 +231,7 @@
       // 获取组织下人员
       getOrgUserInfo(orgobjid) {
         let _that = this;
+        alert(orgobjid)
         api.getOrgUserInfo(orgobjid, function (res) {
           // _that.username = res.data.data.leadername
           // _that.orgname = res.data.data.orginfos[0].orgname
@@ -276,6 +279,8 @@
             _that.orginfosName = _that.selectOrginfos[i].key;
             orgobjid = _that.selectOrginfos[i].value;
           }
+          console.log('kkk');
+          console.log(orgobjid);
           _that.getOrgUserInfo(orgobjid);
         })
       },
@@ -320,7 +325,6 @@
             _that.userInfo[i].reason = '';
             _that.userInfo[i].repState = '';
           }
-          // alert(JSON.stringify(_that.userInfo))
         })
       },
       // 点击选取部门列表
@@ -360,7 +364,6 @@
                   _that.userInfo[i].reason = '';
                   _that.userInfo[i].repState = '';
                 }
-                alert(JSON.stringify(_that.userInfo))
               } else {
                 // _that.infos.users = '';
                 // _that.infos.ddids = '';
@@ -383,7 +386,7 @@
               errorCode:"错误码"
            }
            **/
-          alert('dd ding error: ' + window.location.href + JSON.stringify(err));
+          // alert('dd ding error: ' + window.location.href + JSON.stringify(err));
           console.log('dd ding error: ' + window.location.href + JSON.stringify(err));
         });
       },

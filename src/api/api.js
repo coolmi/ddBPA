@@ -92,7 +92,7 @@ export default {
    * @param cb
    */
   getLogout: function (cb) {
-    axios.get('/app/logout?&_time_=' + Date.now())
+    axios.get('dingding/es/logout')
       .then((res) => {
         cb(res)
       }).catch((error) => {
