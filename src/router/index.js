@@ -12,41 +12,52 @@ Vue.use(Router)
 let dd = window.dd;
 const router = new Router({
   mode: 'history',
+  base: '/bpa/',
   routes: [
     {
       path: '/',
-      component: require('@/views/material'),
-      meta: {
-        title: '客户询单提报',
-        ddConfig: true
-      }
+      component: require('@/views/bpaHome'),
+      meta: {title: '工作台'}
     },
     {
-      path: '/materialList',
-      component: require('@/views/materialList'),
-      meta: {title: '询单明细列表'}
+      path: '/unlock',
+      component: require('@/views/unlock'),
+      meta: {title: '开启报平安'}
     },
     {
-      path: '/deliveryList',
-      component: require('@/views/deliveryList'),
-      meta: {title: '交货计划'}
+      path: '/safetyResultList',
+      component: require('@/views/safetyResultList'),
+      meta: {title: '上报情况'}
     },
     {
-      path: '/deliveryPlan',
-      component: require('@/views/deliveryPlan'),
-      meta: {title: '交货计划明细'}
+      path: '/clockin',
+      component: require('@/views/clockin'),
+      meta: {title: '员工报平安'}
     },
     {
-      path: '/materialHeader',
-      component: require('@/views/materialHeader'),
-      meta: {title: '客户询单抬头'}
+      path: '/tabSafetyResultsCount',
+      component: require('@/views/tabSafetyResultsCount'),
+      meta: {title: '上报情况总览'}
     },
     {
-      path: '*',
-      component: require('@/views/error'),
-      meta: {
-        title: '错误'
-      }
+      path: '/tabSafetyResults',
+      component: require('@/views/tabSafetyResults'),
+      meta: {title: '已报/未报情况统计'}
+    },
+    {
+      path: '/tabSafetyResultsException',
+      component: require('@/views/tabSafetyResultsException'),
+      meta: {title: '上报异常信息统计'}
+    },
+    {
+      path: '/123',
+      component: require('@/views/interview'),
+      meta: {title: '面试评价'}
+    },
+    {
+      path: '/viewing',
+      component: require('@/views/viewing'),
+      meta: {title: '进行评价'}
     }
   ]
 })

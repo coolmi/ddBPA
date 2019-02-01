@@ -19,7 +19,7 @@ store.dispatch('saveURL', location.href)
 store.dispatch('saveDingTalkCode')
 // initVue();
 dingUser.getRequestAuthCode(location.href).then((data) => {
-  api.getLogin(data).then(res => {
+  api.getLogin(data, function (res) {
     if (res.data.code) {
       initVue();
     } else {
