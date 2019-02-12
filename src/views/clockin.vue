@@ -41,7 +41,6 @@
   import whole from '@/lib/whole'
   import api from 'api'
   import ding from '@/lib/ding'
-  import dingUser from '@/lib/dingUser'
   import DEM from '@/lib/dingErrMessage'
   import {mapGetters} from 'vuex'
 
@@ -72,56 +71,8 @@
       this.getSafetyReportState()
       this.setTime()
       this.getLocation()
-      this.setRight();
     },
     methods: {
-      getorg () {
-        let _that = this;
-        let dd = window.dd;
-        ding.jsApiOAuth(_that.path).then((ddconfig) => {
-          dd.config(ddconfig);
-        }).catch(function (error) {
-          ding.alertInfo(DEM.ddConfigInfoError);
-        });
-      },
-      setRight() {
-        let dd = window.dd
-        let _that = this;
-        let rightBtn = {
-          text: '切换用户',
-          show: true, // 控制按钮显示， true 显示， false 隐藏， 默认true
-          control: true, // 是否控制点击事件，true 控制，false 不控制， 默认false
-          showIcon: true, // 是否显示icon，true 显示， false 不显示，默认true； 注：具体UI以客户端为准
-          onSuccess: function (result) {
-            api.getLogout(function () {
-              dd.device.notification.prompt({
-                message: '输入itcode',
-                title: '提示',
-                buttonLabels: ['确定', '取消'],
-                onSuccess: function (result) {
-                  if (result.buttonIndex === 0) {
-                    dingUser.getRequestAuthCode(_that.path).then((data) => {
-                      api.getDebugLogin(data, result.value, function (res) {
-                        if (res.data.code) {
-                          _that.showPage = 1;
-                          _that.getddUserID()
-                          _that.getSafetyReportState()
-                          _that.getorg();
-                        } else {
-                          _that.showPage = 2;
-                        }
-                      })
-                    })
-                  }
-                },
-                onFail: function (err) {
-                }
-              });
-            })
-          }
-        }
-        ding.setRight(rightBtn)
-      },
       getddUserID() {
         let _that = this;
         api.getOrgDdid(function (res) {
@@ -145,15 +96,15 @@
               title: '提示', // 可传空
               buttonName: '确定',
               onSuccess: function() {
-                // setTimeout(() => {
-                //   let dd = window.dd;
-                //   dd.biz.navigation.close({
-                //     onSuccess: function(result) {
-                //     },
-                //     onFail: function(err) {}
-                //   })
-                // }, 500);
-                // return;
+                setTimeout(() => {
+                  let dd = window.dd;
+                  dd.biz.navigation.close({
+                    onSuccess: function(result) {
+                    },
+                    onFail: function(err) {}
+                  })
+                }, 500);
+                return;
               },
               onFail: function(err) {}
             });
@@ -166,15 +117,15 @@
               title: '提示', // 可传空
               buttonName: '确定',
               onSuccess: function() {
-                // setTimeout(() => {
-                //   let dd = window.dd;
-                //   dd.biz.navigation.close({
-                //     onSuccess: function(result) {
-                //     },
-                //     onFail: function(err) {}
-                //   })
-                // }, 500);
-                // return;
+                setTimeout(() => {
+                  let dd = window.dd;
+                  dd.biz.navigation.close({
+                    onSuccess: function(result) {
+                    },
+                    onFail: function(err) {}
+                  })
+                }, 500);
+                return;
               },
               onFail: function(err) {}
             });
@@ -218,15 +169,15 @@
               title: '提示', // 可传空
               buttonName: '确定',
               onSuccess: function() {
-                // setTimeout(() => {
-                //   let dd = window.dd;
-                //   dd.biz.navigation.close({
-                //     onSuccess: function(result) {
-                //     },
-                //     onFail: function(err) {}
-                //   })
-                // }, 500);
-                // return;
+                setTimeout(() => {
+                  let dd = window.dd;
+                  dd.biz.navigation.close({
+                    onSuccess: function(result) {
+                    },
+                    onFail: function(err) {}
+                  })
+                }, 500);
+                return;
               },
               onFail: function(err) {}
             });
@@ -277,14 +228,14 @@
                   _that.bshow = false
                   _that.info = '已上报'
                   _that.clearTime()
-                  // setTimeout(() => {
-                  //   let dd = window.dd;
-                  //   dd.biz.navigation.close({
-                  //     onSuccess: function(result) {
-                  //     },
-                  //     onFail: function(err) {}
-                  //   })
-                  // }, 1500);
+                  setTimeout(() => {
+                    let dd = window.dd;
+                    dd.biz.navigation.close({
+                      onSuccess: function(result) {
+                      },
+                      onFail: function(err) {}
+                    })
+                  }, 1500);
                 } else {
                   window.alert('上报失败，请重试')
                 }
@@ -346,15 +297,15 @@
                 title: '提示', // 可传空
                 buttonName: '确定',
                 onSuccess: function() {
-                  // setTimeout(() => {
-                  //   let dd = window.dd;
-                  //   dd.biz.navigation.close({
-                  //     onSuccess: function(result) {
-                  //     },
-                  //     onFail: function(err) {}
-                  //   })
-                  // }, 1500);
-                  // return;
+                  setTimeout(() => {
+                    let dd = window.dd;
+                    dd.biz.navigation.close({
+                      onSuccess: function(result) {
+                      },
+                      onFail: function(err) {}
+                    })
+                  }, 1500);
+                  return;
                 },
                 onFail: function(err) {}
               });

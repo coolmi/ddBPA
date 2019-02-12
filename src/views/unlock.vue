@@ -2,15 +2,13 @@
   <div>
     <x-input title="姓名" v-model="username" disabled style="color: #000;display: none"></x-input>
     <x-input title="所属组织" v-model="orgname" disabled style="color: #000;;display: none"></x-input>
-    <x-textarea title="报平安人员" @click.native="checkPerson" v-model="infos.users" :rows="2" name="请选择报平安人员" autosize
-                style="display: none">
+    <x-textarea title="报平安人员" @click.native="checkPerson" v-model="infos.users" :rows="2" name="请选择报平安人员" autosize style="display: none">
     </x-textarea>
     <x-table>
       <tr>
         <th style="width: 113px;font-size: 14px">组织</th>
         <th style="width: 187px;font-size: 14px">
-          <cell is-link v-model="orginfosName" @click.native="showPopupOptionOrg()"
-                style="width: 180px;height: 30px;font-size: 14px;color: black;overflow: hidden;text-overflow: ellipsis;white-space: nowrap"></cell>
+          <cell is-link v-model="orginfosName" @click.native="showPopupOptionOrg()" style="width: 180px;height: 30px;font-size: 14px;color: black;overflow: hidden;text-overflow: ellipsis;white-space: nowrap"></cell>
         </th>
       </tr>
     </x-table>
@@ -26,8 +24,7 @@
       <tr v-for="(item,index) in userInfo" :key="index">
         <td style="font-size: 14px;width: 120px;">{{item.ename}}</td>
         <td>
-          <cell v-model="item.reason" is-link @click.native="showPopupOption(item.pernr)"
-                style="width: 180px;height: 30px;font-size: 14px;color: black;padding-right: 30px"></cell>
+          <cell v-model="item.reason" is-link @click.native="showPopupOption(item.pernr)" style="width: 180px;height: 30px;font-size: 14px;color: black;padding-right: 30px"></cell>
         </td>
       </tr>
       </tbody>
@@ -42,9 +39,7 @@
           v-model="demo4"
           default-item-class="demo4-item"
           selected-item-class="demo4-item-selected">
-          <checker-item v-for="(val,index) in chooseReason" :key="index" :value="val.value"
-                        @on-item-click="onItemClick(val)">{{val.text}}
-          </checker-item>
+          <checker-item v-for="(val,index) in chooseReason" :key="index" :value="val.value" @on-item-click="onItemClick(val)">{{val.text}}</checker-item>
         </checker>
       </div>
     </popup>
@@ -61,14 +56,13 @@
           <checker-item v-for="(val,index) in orginfos" :key="index" :value="val">{{val.key}}</checker-item>
         </checker>
       </div>
-      <x-button text="确定" @click.native="confimOrg" :gradients="['#1D62F0', '#19D5FD']"
-                style="margin-bottom: 20px"></x-button>
+      <x-button text="确定" @click.native="confimOrg" :gradients="['#1D62F0', '#19D5FD']" style="margin-bottom: 20px"></x-button>
     </popup>
     <group labelWidth="6.5rem" gutter="0" labelMarginRight="1rem" v-if="userInfo.length > 0">
       <datetime v-model="openDate" name="会议日期" required format="YYYY-MM-DD">
         <p slot="title">开启日期<span class="tip">*</span></p>
       </datetime>
-      <datetime v-model="openTime" format="HH:mm" name="开始时间" required>
+      <datetime v-model="openTime" format="HH:mm"  name="开始时间"  required>
         <p slot="title">开启时间<span class="tip">*</span></p>
       </datetime>
       <div style="display: flex;justify-content: space-between; align-items: center;border-top: 1px solid #e3e3e3">
@@ -77,7 +71,7 @@
           <!--<x-input title="姓名" v-model="ename" style="color: #000;" placeholder="请输入姓名"></x-input>-->
         </div>
         <div style="width: 40%;">
-          <x-input title="" type="number" v-model="openReport" style="color: #000" placeholder="请输入间隔时间"></x-input>
+          <x-input title="" v-model="openReport" style="color: #000" placeholder="请输入间隔时间"></x-input>
         </div>
         <div style="width: 30%;">
           分钟之后开始
@@ -85,8 +79,7 @@
         </div>
       </div>
     </group>
-    <x-button text="开启报平安" @click.native="btnDisabled" v-if="userInfo.length > 0" :gradients="['#1D62F0', '#19D5FD']"
-              style="margin-bottom: 30px"></x-button>
+    <x-button text="开启报平安" @click.native="btnDisabled" v-if="userInfo.length > 0" :gradients="['#1D62F0', '#19D5FD']" style="margin-bottom: 30px"></x-button>
   </div>
 </template>
 
@@ -95,7 +88,6 @@
   import whole from '@/lib/whole'
   import api from 'api'
   import ding from '@/lib/ding'
-  import dingUser from '@/lib/dingUser'
   import DEM from '@/lib/dingErrMessage'
   import {mapGetters} from 'vuex'
 
@@ -112,7 +104,7 @@
       Popup,
       Datetime
     },
-    data() {
+    data () {
       return {
         openS: '',
         selectOrginfos: '',
@@ -159,58 +151,20 @@
       })
     },
     created() {
-      this.getorg();
-      this.setRight();
+      let _that = this;
+      let dd = window.dd;
+      ding.jsApiOAuth(_that.path).then((ddconfig) => {
+        // alert(JSON.stringify(ddconfig))
+        dd.config(ddconfig);
+        _that.getOrgInfo();
+        // _that.getddUserID();
+        // _that.checkPerson();
+      }).catch(function (error) {
+        ding.alertInfo(DEM.ddConfigInfoError);
+      });
     },
     methods: {
-      getorg () {
-        let _that = this;
-        let dd = window.dd;
-        ding.jsApiOAuth(_that.path).then((ddconfig) => {
-          dd.config(ddconfig);
-          _that.getOrgInfo();
-        }).catch(function (error) {
-          ding.alertInfo(DEM.ddConfigInfoError);
-        });
-      },
-      setRight() {
-        let dd = window.dd
-        let _that = this;
-        let rightBtn = {
-          text: '切换用户',
-          show: true, // 控制按钮显示， true 显示， false 隐藏， 默认true
-          control: true, // 是否控制点击事件，true 控制，false 不控制， 默认false
-          showIcon: true, // 是否显示icon，true 显示， false 不显示，默认true； 注：具体UI以客户端为准
-          onSuccess: function (result) {
-            api.getLogout(function () {
-              dd.device.notification.prompt({
-                message: '输入itcode',
-                title: '提示',
-                buttonLabels: ['确定', '取消'],
-                onSuccess: function (result) {
-                  if (result.buttonIndex === 0) {
-                    dingUser.getRequestAuthCode(_that.path).then((data) => {
-                      api.getDebugLogin(data, result.value, function (res) {
-                        if (res.data.code) {
-                          _that.showPage = 1;
-                          _that.getorg();
-                        } else {
-                          _that.showPage = 2;
-                          whole.showTop('登陆失败！请重试！')
-                        }
-                      })
-                    })
-                  }
-                },
-                onFail: function (err) {
-                }
-              });
-            })
-          }
-        }
-        ding.setRight(rightBtn)
-      },
-      confimOrg() {
+      confimOrg () {
         let _that = this;
         let orgobjid = '';
         let orginfosName = '';
@@ -245,7 +199,7 @@
         })
       },
       // 获取获取管理组织及下级组织
-      getOrgInfo() {
+      getOrgInfo () {
         let _that = this;
         let dd = window.dd;
         api.getOrgInfo(function (res) {
@@ -255,19 +209,17 @@
               message: '您当前岗位下无组织',
               title: '提示', // 可传空
               buttonName: '确定',
-              onSuccess: function () {
-                // setTimeout(() => {
-                //   let dd = window.dd;
-                //   dd.biz.navigation.close({
-                //     onSuccess: function (result) {
-                //     },
-                //     onFail: function (err) {
-                //     }
-                //   })
-                // }, 500);
+              onSuccess: function() {
+                setTimeout(() => {
+                  let dd = window.dd;
+                  dd.biz.navigation.close({
+                    onSuccess: function(result) {
+                    },
+                    onFail: function(err) {}
+                  })
+                }, 500);
               },
-              onFail: function (err) {
-              }
+              onFail: function(err) {}
             });
             return;
           }
@@ -282,7 +234,7 @@
         })
       },
       // 选择例外原因
-      onItemClick(val) {
+      onItemClick (val) {
         // alert(JSON.stringify(val.text));
         let _that = this;
         if (!_that.disabled) {
@@ -290,29 +242,29 @@
         }
         if (_that.emplId) {
           for (var i = 0; i < _that.userInfo.length; i++) {
-            if (_that.userInfo[i].pernr === _that.emplId) {
-              _that.userInfo[i].reason = JSON.stringify(val.text).replace(/"/g, '');
-              if (_that.userInfo[i].reason === '取消') {
-                _that.userInfo[i].reason = '';
-              }
-              _that.userInfo[i].repState = JSON.stringify(val.value);
+               if (_that.userInfo[i].pernr === _that.emplId) {
+                 _that.userInfo[i].reason = JSON.stringify(val.text).replace(/"/g, '');
+                 if (_that.userInfo[i].reason === '取消') {
+                   _that.userInfo[i].reason = '';
+                 }
+                 _that.userInfo[i].repState = JSON.stringify(val.value);
+               }
             }
-          }
         }
       },
-      showPopupOption(data) {
+      showPopupOption (data) {
         let _that = this;
         _that.emplId = '';
         _that.emplId = data;
         _that.showPopup = true
       },
-      showPopupOptionOrg() {
+      showPopupOptionOrg () {
         let _that = this;
         _that.showPopupOrg = true
       },
       // 获取员工信息及部门信息
       getddUserID() {
-        let _that = this;
+       let _that = this;
         api.getOrgDdid(function (res) {
           _that.username = res.data.data.leadername
           _that.orgname = res.data.data.orginfos[0].orgname
@@ -322,10 +274,11 @@
             _that.userInfo[i].reason = '';
             _that.userInfo[i].repState = '';
           }
+          // alert(JSON.stringify(_that.userInfo))
         })
       },
       // 点击选取部门列表
-      checkPerson() {
+      checkPerson () {
         let _that = this;
         let pickedUsers = [];
         for (let u of _that.userInfo) {
@@ -361,6 +314,7 @@
                   _that.userInfo[i].reason = '';
                   _that.userInfo[i].repState = '';
                 }
+                alert(JSON.stringify(_that.userInfo))
               } else {
                 // _that.infos.users = '';
                 // _that.infos.ddids = '';
@@ -383,12 +337,12 @@
               errorCode:"错误码"
            }
            **/
-          // alert('dd ding error: ' + window.location.href + JSON.stringify(err));
+          alert('dd ding error: ' + window.location.href + JSON.stringify(err));
           console.log('dd ding error: ' + window.location.href + JSON.stringify(err));
         });
       },
       // 点击开启报平安
-      btnDisabled() {
+      btnDisabled () {
         let _that = this;
         let dd = window.dd;
         if (_that.openS === '1') {
@@ -397,10 +351,9 @@
             message: '当前组织已经开启，请重新选择！',
             title: '提示', // 可传空
             buttonName: '确定',
-            onSuccess: function () {
+            onSuccess: function() {
             },
-            onFail: function (err) {
-            }
+            onFail: function(err) {}
           });
           return;
         }
@@ -410,10 +363,9 @@
             message: '开启日期必填',
             title: '提示', // 可传空
             buttonName: '确定',
-            onSuccess: function () {
+            onSuccess: function() {
             },
-            onFail: function (err) {
-            }
+            onFail: function(err) {}
           });
           return;
         }
@@ -423,23 +375,21 @@
             message: '开启时间必填',
             title: '提示', // 可传空
             buttonName: '确定',
-            onSuccess: function () {
+            onSuccess: function() {
             },
-            onFail: function (err) {
-            }
+            onFail: function(err) {}
           });
           return;
         }
-        if (_that.openReport === '') {
+        if (Number(_that.openReport) === 0) {
           // whole.showTop('间隔时间必填');
           dd.device.notification.alert({
-            message: '间隔时间必填',
+            message: '间隔时间无效',
             title: '提示', // 可传空
             buttonName: '确定',
-            onSuccess: function () {
+            onSuccess: function() {
             },
-            onFail: function (err) {
-            }
+            onFail: function(err) {}
           });
           return;
         }
@@ -456,19 +406,17 @@
               message: '报平安已开启',
               title: '提示', // 可传空
               buttonName: '确定',
-              onSuccess: function () {
+              onSuccess: function() {
                 setTimeout(() => {
                   let dd = window.dd;
                   dd.biz.navigation.close({
-                    onSuccess: function (result) {
+                    onSuccess: function(result) {
                     },
-                    onFail: function (err) {
-                    }
+                    onFail: function(err) {}
                   })
                 }, 500);
               },
-              onFail: function (err) {
-              }
+              onFail: function(err) {}
             });
           } else {
             window.alert('开启失败，请重试')
@@ -491,13 +439,11 @@
     border-radius: 15px;
     margin-top: 5px;
   }
-
   /*选中样式*/
   .demo4-item-selected {
     background-color: #FF3B3B;
     color: #fff;
   }
-
   /*禁止选择样式*/
   .demo4-item-disabled {
     color: #999;
