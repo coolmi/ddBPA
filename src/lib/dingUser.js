@@ -7,7 +7,6 @@ import whole from '@/lib/whole'
 
 export function getRequestAuthCode(path) {
   return Q.Promise((success, error) => {
-    // success('123sddsfsdfdsfsdfds')
     ding.jsApiOAuth(path).then((ddconfig) => {
       let dd = window.dd;
       dd.ready(function () {
