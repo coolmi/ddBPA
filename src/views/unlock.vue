@@ -154,11 +154,8 @@
       let _that = this;
       let dd = window.dd;
       ding.jsApiOAuth(_that.path).then((ddconfig) => {
-        // alert(JSON.stringify(ddconfig))
         dd.config(ddconfig);
         _that.getOrgInfo();
-        // _that.getddUserID();
-        // _that.checkPerson();
       }).catch(function (error) {
         ding.alertInfo(DEM.ddConfigInfoError);
       });
