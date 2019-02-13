@@ -25,7 +25,7 @@
       },
       processButton003 () {
         window.location = '/bpa/tabSafetyResultsCount?dd_orientation=landscape'
-        // window.location = '/tabSafetyResultsCount?dd_orientation=landscape'
+        // window.location = '/tabSafetyResultsCount?dd_orientation=landscap
       },
       processButton004 () {
         this.$router.push({path: '/safetyResultList', query: {}})
