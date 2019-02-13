@@ -151,17 +151,58 @@
       })
     },
     created() {
-      let _that = this;
-      let dd = window.dd;
-      ding.jsApiOAuth(_that.path).then((ddconfig) => {
-        dd.config(ddconfig);
-        _that.getOrgInfo();
-      }).catch(function (error) {
-        ding.alertInfo(DEM.ddConfigInfoError);
-      });
+      this.getorg();
+      // this.setRight();
     },
     methods: {
-      confimOrg () {
+      getorg () {
+        let _that = this;
+        let dd = window.dd;
+        ding.jsApiOAuth(_that.path).then((ddconfig) => {
+          dd.config(ddconfig);
+          _that.getOrgInfo();
+        }).catch(function (error) {
+          ding.alertInfo(DEM.ddConfigInfoError);
+        });
+      },
+      setRight() {
+        let dd = window.dd
+        let _that = this;
+        let rightBtn = {
+          text: '切换用户',
+          show: true, // 控制按钮显示， true 显示， false 隐藏， 默认true
+          control: true, // 是否控制点击事件，true 控制，false 不控制， 默认false
+          showIcon: true, // 是否显示icon，true 显示， false 不显示，默认true； 注：具体UI以客户端为准
+          onSuccess: function (result) {
+            api.getLogout(function () {
+              dd.device.notification.prompt({
+                message: '输入itcode',
+                title: '提示',
+                buttonLabels: ['确定', '取消'],
+                onSuccess: function (result) {
+                  if (result.buttonIndex === 0) {
+                    dingUser.getRequestAuthCode(_that.path).then((data) => {
+                      api.getDebugLogin(data, result.value, function (res) {
+                        if (res.data.code) {
+                          _that.showPage = 1;
+                          _that.getorg();
+                        } else {
+                          _that.showPage = 2;
+                          whole.showTop('登陆失败！请重试！')
+                        }
+                      })
+                    })
+                  }
+                },
+                onFail: function (err) {
+                }
+              });
+            })
+          }
+        }
+        ding.setRight(rightBtn)
+      },
+      confimOrg() {
         let _that = this;
         let orgobjid = '';
         let orginfosName = '';
