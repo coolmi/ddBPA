@@ -14,7 +14,7 @@
               <th style="width: 45px;font-size: 14px">{{val.a}}</th>
               <th style="width: 55px;font-size: 14px">{{val.c}}</th>
               <th style="width: 45px;font-size: 14px">{{val.b}}</th>
-              <th style="width: 100px;font-size: 14px">{{val.d}}</th>
+              <th v-if="isyc === '1'" style="width: 100px;font-size: 14px">{{val.d}}</th>
               <th style="width: 100px;font-size: 14px">{{val.e}}</th>
               <th style="width: 70px;font-size: 14px">{{val.f}}</th>
             </tr>
@@ -31,7 +31,7 @@
               <td style="width: 45px;font-size: 14px">{{item.sb}}</td>
               <td style="width: 55px;font-size: 14px">{{item.wsb}}</td>
               <td style="width: 45px;font-size: 14px">{{item.ysb}}</td>
-              <td style="width: 100px;font-size: 14px">{{item.ddyc}}</td>
+              <td v-if="isyc === '1'" style="width: 100px;font-size: 14px">{{item.ddyc}}</td>
               <td style="width: 100px;font-size: 14px">{{item.orgname}}</td>
               <td style="width: 70px;font-size: 14px">{{item.leadername}}</td>
             </tr>
@@ -51,8 +51,11 @@
               <p slot="title" style="font-size: 14px">查询日期</p>
             </datetime>
           </div>
+          <div style="width: 50%;">
+            <x-switch title="位置异常显示" :value-map="['0', '1']" v-model="isyc" style="color: #000;font-size: 14px"></x-switch>
+          </div>
         </div>
-        <x-button text="查询" @click.native="getSafetyResultsCount(leadername, dateStr)" :gradients="['#1D62F0', '#19D5FD']"></x-button>
+        <x-button text="查询" @click.native="getSafetyResultsCount(leadername, dateStr, isyc)" :gradients="['#1D62F0', '#19D5FD']"></x-button>
       </div>
     </div>
   </div>
@@ -78,6 +81,7 @@ export default {
       repState: '',
       orgname: '',
       leadername: '',
+      isyc: '0',
       dateStr: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(),
       mtop: false,
       list: '',
@@ -168,12 +172,17 @@ export default {
         })
       })
     },
-    getSafetyResultsCount (leadername, dateStr) {
+    getSafetyResultsCount (leadername, dateStr, isyc) {
       let _that = this;
-      api.getSafetyResultsCount(leadername, dateStr, function (res) {
-        // alert(JSON.stringify(res.data.data.safetyresult))
-        _that.list = res.data.data.safetyresult;
-      })
+      if (isyc === undefined) {
+        api.getSafetyResultsCount(leadername, dateStr, '0', function (res) {
+          _that.list = res.data.data.safetyresult;
+        })
+      } else {
+        api.getSafetyResultsCount(leadername, dateStr, isyc, function (res) {
+          _that.list = res.data.data.safetyresult;
+        })
+      }
     },
     getSafetyResults (ename, mobile, flag) {
       let _that = this;

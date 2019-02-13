@@ -189,8 +189,8 @@ export default {
    * 获取上报情况总览
    * @param cb
    */
-  getSafetyResultsCount: function (leadername, dateStr, cb) {
-    axios.get('/dingding/safetyreport/getSafetyResultsCount?leadername=' + leadername + '&dateStr=' + dateStr + '&_time_=' + Date.now())
+  getSafetyResultsCount: function (leadername, dateStr, isyc, cb) {
+    axios.get('/dingding/safetyreport/getSafetyResultsCount?leadername=' + leadername + '&dateStr=' + dateStr + '&isyc=' + isyc + '&_time_=' + Date.now())
       .then((res) => {
         cb(res);
       }).catch((error) => {

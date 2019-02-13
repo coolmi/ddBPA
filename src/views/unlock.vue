@@ -90,6 +90,7 @@
   import ding from '@/lib/ding'
   import DEM from '@/lib/dingErrMessage'
   import {mapGetters} from 'vuex'
+  import dingUser from '@/lib/dingUser'
 
   export default {
     components: {
@@ -188,7 +189,6 @@
                           _that.getorg();
                         } else {
                           _that.showPage = 2;
-                          whole.showTop('登陆失败！请重试！')
                         }
                       })
                     })
