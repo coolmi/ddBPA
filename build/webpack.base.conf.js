@@ -10,8 +10,7 @@ function resolve (dir) {
 
 const webpackConfig = {
   entry: {
-    app: './src/main.js',
-    'pdf.worker': 'pdfjs-dist/build/pdf.worker.entry'
+    app: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,
